@@ -31,9 +31,6 @@ export class DeleteProductUseCase implements IDeleteProductUseCase {
       throw new ProductNotFoundException(id);
     }
 
-    await this.eventPublisher.publish(ProductEvents.DELETED, {
-      id,
-      deletedAt: new Date(),
-    });
+    await this.eventPublisher.publish(ProductEvents.DELETED, product);
   }
 }
