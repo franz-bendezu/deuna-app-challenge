@@ -14,7 +14,7 @@ export const KAFKA_CLIENT: InjectionToken<ClientKafkaProxy> = 'KAFKA_CLIENT';
 
 export const kafkaClientFactory = (
   configService: ConfigService<EnvironmentConfig>,
-) => {
+): ClientKafkaProxy => {
   const kafkaConfig = configService.get<KafkaConfiguration>('kafka');
 
   if (!kafkaConfig) {
