@@ -1,0 +1,77 @@
+import { ProductMapper } from './product.mapper';
+import { Product } from '../../../domain/models/product.model';
+import { ProductDto } from '../dtos/product.dto';
+import { BaseProductDto } from '../dtos/base-product.dto';
+import { BaseProduct } from '../../../domain/models/base-product.model';
+
+describe('ProductMapper', () => {
+  describe('mapToDto', () => {
+    it('should map a Product to a ProductDto correctly', () => {
+      const product: Product = {
+        id: '123',
+        name: 'Test Product',
+        description: 'This is a test product',
+        price: 100,
+        stock: 50,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      const expectedDto: ProductDto = new ProductDto(
+        '123',
+        'Test Product',
+        'This is a test product',
+        100,
+        50,
+      );
+
+      const result = ProductMapper.mapToDto(product);
+
+      expect(result).toEqual(expectedDto);
+    });
+  });
+
+  describe('mapDtoToProduct', () => {
+    it('should map a BaseProductDto to a BaseProduct correctly', () => {
+      const dto: BaseProductDto = {
+        name: 'Test Product',
+        description: 'This is a test product',
+        price: 100,
+        stock: 50,
+      };
+
+      const expectedProduct: BaseProduct = new BaseProduct(
+        'Test Product',
+        'This is a test product',
+        100,
+        50,
+      );
+      const result = ProductMapper.mapDtoToProduct(dto);
+
+      expect(result).toEqual(expectedProduct);
+    });
+  });
+
+  describe('mapDtoToUpdateParams', () => {
+    it('should map a ProductDto to a BaseProduct correctly', () => {
+      const dto: ProductDto = new ProductDto(
+        '123',
+        'Updated Product',
+        'This is an updated product',
+        150,
+        30,
+      );
+
+      const expectedProduct: BaseProduct = new BaseProduct(
+        'Updated Product',
+        'This is an updated product',
+        150,
+        30,
+      );
+
+      const result = ProductMapper.mapDtoToUpdateParams(dto);
+
+      expect(result).toEqual(expectedProduct);
+    });
+  });
+});
