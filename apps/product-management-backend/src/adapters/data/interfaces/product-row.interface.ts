@@ -2,8 +2,8 @@ export interface IProductRow {
   id: string;
   name: string;
   description: string;
-  price: number;
-  stock: number;
+  price: number | string;
+  stock: number | string;
   createdAt: Date;
   updatedAt: Date;
 }
