@@ -1,10 +1,11 @@
 import { InjectionToken } from '@nestjs/common';
-import { IProductRepository } from '../../application/repositories/product-repository.interface';
+import { IProductRepository } from '../../application/repositories/product.repository.interface';
 import { ICreateProductUseCase } from '../usecases/create-product-usecase.interface';
 import { IFindAllProductsUseCase } from '../usecases/find-all-products-usecase.interface';
 import { IFindProductByIdUseCase } from '../usecases/find-product-by-id-usecase.interface';
 import { IUpdateProductUseCase } from '../usecases/update-product-usecase.interface';
 import { IDeleteProductUseCase } from '../usecases/delete-product-usecase.interface';
+import { IEventPublisher } from '../interfaces/event-publisher.interface';
 
 // Repositories
 export const PRODUCT_REPOSITORY: InjectionToken<IProductRepository> =
@@ -21,3 +22,6 @@ export const UPDATE_PRODUCT_USECASE: InjectionToken<IUpdateProductUseCase> =
 export const DELETE_PRODUCT_USECASE: InjectionToken<IDeleteProductUseCase> =
   'DELETE_PRODUCT_USECASE';
 
+// Infrastructure
+export const EVENT_PUBLISHER: InjectionToken<IEventPublisher> =
+  'EVENT_PUBLISHER';

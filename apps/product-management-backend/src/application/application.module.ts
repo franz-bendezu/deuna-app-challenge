@@ -12,9 +12,10 @@ import {
   DELETE_PRODUCT_USECASE,
 } from '../domain/constants/injection-tokens';
 import { AdaptersDataModule } from '../adapters/data/data.module';
+import { AdaptersMessagingModule } from '../adapters/messaging/messaging.module';
 
 @Module({
-  imports: [AdaptersDataModule],
+  imports: [AdaptersDataModule, AdaptersMessagingModule],
   providers: [
     {
       provide: CREATE_PRODUCT_USECASE,

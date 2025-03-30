@@ -4,6 +4,7 @@ import envConfiguration from './config/env.config';
 import { cacheRedisFactory } from './config/cache.config';
 import { DATABASE_POOL, databasePoolFactory } from './config/database.config';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { KAFKA_CLIENT, kafkaClientFactory } from './config/kafka.config';
 
 @Module({
   imports: [
@@ -22,7 +23,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       useFactory: databasePoolFactory,
       inject: [ConfigService],
     },
+    {
+      provide: KAFKA_CLIENT,
+      useFactory: kafkaClientFactory,
+      inject: [ConfigService],
+    },
   ],
-  exports: [DATABASE_POOL],
+  exports: [DATABASE_POOL, KAFKA_CLIENT],
 })
 export class InfrastructureModule {}
