@@ -25,7 +25,9 @@ import {
   FIND_PRODUCT_BY_ID_USECASE,
   UPDATE_PRODUCT_USECASE,
 } from '../../../domain/constants/injection-tokens';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('products')
 @Controller('products')
 export class ProductsController {
   constructor(
@@ -43,6 +45,10 @@ export class ProductsController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({
+    summary: 'Create a new product',
+    description: 'Creates a new product in the system.',
+  })
   async create(@Body() createProductDto: BaseProductDto): Promise<ProductDto> {
     const productParams = ProductMapper.mapDtoToProduct(createProductDto);
     const createdProduct =
@@ -51,18 +57,33 @@ export class ProductsController {
   }
 
   @Get()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Get all products',
+    description: 'Retrieves all products from the system.',
+  })
   async findAll(): Promise<ProductDto[]> {
     const products = await this.findAllProductsUseCase.execute();
     return products.map((product) => ProductMapper.mapToDto(product));
   }
 
   @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Get a product by ID',
+    description: 'Retrieves a product by its ID from the system.',
+  })
   async findOne(@Param('id') id: string) {
     const product = await this.findProductByIdUseCase.execute(id);
     return ProductMapper.mapToDto(product);
   }
 
   @Put(':id')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Update a product',
+    description: 'Updates an existing product in the system.',
+  })
   async update(@Param('id') id: string, @Body() updateProductDto: ProductDto) {
     const params = ProductMapper.mapDtoToUpdateParams(updateProductDto);
     const updatedProduct = await this.updateProductUseCase.execute(id, params);
@@ -71,6 +92,10 @@ export class ProductsController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({
+    summary: 'Delete a product',
+    description: 'Deletes a product from the system.',
+  })
   async remove(@Param('id') id: string) {
     await this.deleteProductUseCase.execute(id);
   }
