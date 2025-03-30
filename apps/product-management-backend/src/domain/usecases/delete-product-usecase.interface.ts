@@ -1,3 +1,3 @@
 export interface IDeleteProductUseCase {
-  execute(id: string): Promise<void>;
+  execute(this: void, id: string): Promise<void>;
 }

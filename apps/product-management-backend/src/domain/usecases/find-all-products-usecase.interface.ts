@@ -1,5 +1,5 @@
 import { Product } from '../models/product.model';
 
 export interface IFindAllProductsUseCase {
-  execute(): Promise<Product[]>;
+  execute(this: void): Promise<Product[]>;
 }
