@@ -24,4 +24,10 @@ interface AppConfiguration {
 
 export interface EnvironmentConfig {
   db: DatabaseConfig;
+
+  redis: CacheConfiguration;
+
+  kafka: KafkaConfiguration;
+
+  app: AppConfiguration;
 }
