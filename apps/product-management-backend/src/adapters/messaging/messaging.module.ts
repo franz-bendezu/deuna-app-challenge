@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
-import { KafkaEventPublisherAdapter } from './publisher/kafka-event.publisher';
-import { EVENT_PUBLISHER } from '../../domain/constants/injection-tokens';
+import { ProductPublisher } from './publisher/product.publisher';
+import { PRODUCT_PUBLISHER } from '../../domain/constants/injection-tokens';
 
 @Module({
   providers: [
     {
-      provide: EVENT_PUBLISHER,
-      useClass: KafkaEventPublisherAdapter,
+      provide: PRODUCT_PUBLISHER,
+      useClass: ProductPublisher,
     },
   ],
-  exports: [EVENT_PUBLISHER],
+  exports: [PRODUCT_PUBLISHER],
 })
 export class AdaptersMessagingModule {}

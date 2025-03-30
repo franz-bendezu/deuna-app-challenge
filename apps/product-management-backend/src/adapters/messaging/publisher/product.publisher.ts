@@ -1,15 +1,17 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ClientKafkaProxy } from '@nestjs/microservices';
-import { IEventPublisher } from '../../../domain/interfaces/event-publisher.interface';
+import { IProductPublisher } from '../../../domain/interfaces/event-publisher.interface';
 import { firstValueFrom } from 'rxjs';
+import { Product } from 'apps/product-management-backend/src/domain/models/product.model';
+import { ProductEvents } from 'apps/product-management-backend/src/domain/constants/events';
 
 @Injectable()
-export class KafkaEventPublisherAdapter implements IEventPublisher {
-  private readonly logger = new Logger(KafkaEventPublisherAdapter.name);
+export class ProductPublisher implements IProductPublisher {
+  private readonly logger = new Logger(ProductPublisher.name);
 
   constructor(private readonly kafkaClient: ClientKafkaProxy) {}
 
-  async publish<T>(topic: string, message: T): Promise<void> {
+  async publish(topic: ProductEvents, message: Product): Promise<void> {
     try {
       await firstValueFrom(this.kafkaClient.emit(topic, message));
       this.logger.log(

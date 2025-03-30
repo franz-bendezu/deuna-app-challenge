@@ -5,7 +5,7 @@ import { IFindAllProductsUseCase } from '../usecases/find-all-products-usecase.i
 import { IFindProductByIdUseCase } from '../usecases/find-product-by-id-usecase.interface';
 import { IUpdateProductUseCase } from '../usecases/update-product-usecase.interface';
 import { IDeleteProductUseCase } from '../usecases/delete-product-usecase.interface';
-import { IEventPublisher } from '../interfaces/event-publisher.interface';
+import { IProductPublisher } from '../interfaces/event-publisher.interface';
 
 // Repositories
 export const PRODUCT_REPOSITORY: InjectionToken<IProductRepository> =
@@ -23,5 +23,5 @@ export const DELETE_PRODUCT_USECASE: InjectionToken<IDeleteProductUseCase> =
   'DELETE_PRODUCT_USECASE';
 
 // Infrastructure
-export const EVENT_PUBLISHER: InjectionToken<IEventPublisher> =
-  'EVENT_PUBLISHER';
+export const PRODUCT_PUBLISHER: InjectionToken<IProductPublisher> =
+  'PRODUCT_PUBLISHER';
