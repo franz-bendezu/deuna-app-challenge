@@ -1,10 +1,13 @@
 import { Keyv, createKeyv } from '@keyv/redis';
 import { CacheableMemory } from 'cacheable';
+import { Cache } from 'cache-manager';
 import { ConfigService } from '@nestjs/config';
 import {
   CacheConfiguration,
   EnvironmentConfig,
 } from '../interfaces/env-config.interface';
+
+export type RedisCache = Pick<Cache, 'get' | 'set' | 'del'>;
 
 export const cacheRedisFactory = (
   configService: ConfigService<EnvironmentConfig>,
