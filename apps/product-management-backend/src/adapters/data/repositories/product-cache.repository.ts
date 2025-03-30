@@ -1,16 +1,15 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Injectable, Inject } from '@nestjs/common';
-import { Cache } from 'cache-manager';
 import { Product } from '../../../domain/models/product.model';
 import { IProductRepository } from '../../../application/repositories/product.repository.interface';
-
+import { RedisCache } from '../../../infrastructure/config/cache.config';
 @Injectable()
 export class ProductCacheRepository implements IProductRepository {
   private readonly PRODUCTS_CACHE_KEY = 'products';
   private readonly PRODUCT_CACHE_PREFIX = 'product:';
   private readonly DEFAULT_TTL = 3600; // 1 hour in seconds
 
-  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
+  constructor(@Inject(CACHE_MANAGER) private cacheManager: RedisCache) {}
 
   private generateProductCacheKey(id: Product['id']): string {
     return `${this.PRODUCT_CACHE_PREFIX}${id}`;
