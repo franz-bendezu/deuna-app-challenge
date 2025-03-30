@@ -1,10 +1,7 @@
 import { Module } from '@nestjs/common';
-import { ProductManagementBackendController } from './product-management-backend.controller';
-import { ProductManagementBackendService } from './product-management-backend.service';
+import { AdaptersWebModule } from './adapters/web/web.module';
 
 @Module({
-  imports: [],
-  controllers: [ProductManagementBackendController],
-  providers: [ProductManagementBackendService],
+  imports: [AdaptersWebModule],
 })
 export class ProductManagementBackendModule {}
