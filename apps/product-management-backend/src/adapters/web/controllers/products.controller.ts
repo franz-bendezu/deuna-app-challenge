@@ -27,6 +27,7 @@ import {
 } from '../../../domain/constants/injection-tokens';
 import {
   ApiCreatedResponse,
+  ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -111,8 +112,7 @@ export class ProductsController {
     description: 'The updated product',
     type: ProductDto,
   })
-  @ApiResponse({
-    status: 404,
+  @ApiNotFoundResponse({
     description: 'Product not found',
   })
   async update(@Param('id') id: string, @Body() updateProductDto: ProductDto) {
@@ -126,6 +126,12 @@ export class ProductsController {
   @ApiOperation({
     summary: 'Delete a product',
     description: 'Deletes a product from the system.',
+  })
+  @ApiNoContentResponse({
+    description: 'Product deleted successfully',
+  })
+  @ApiNotFoundResponse({
+    description: 'Product not found',
   })
   async remove(@Param('id') id: string) {
     await this.deleteProductUseCase.execute(id);
