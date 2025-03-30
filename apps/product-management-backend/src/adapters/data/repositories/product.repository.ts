@@ -5,7 +5,7 @@ import { Inject } from '@nestjs/common';
 import {
   PRODUCT_CACHE_REPOSITORY,
   PRODUCT_DB_REPOSITORY,
-} from 'apps/product-management-backend/src/adapters/data/constants/injection-tokens.constant';
+} from '../../data/constants/injection-tokens.constant';
 
 export class ProductRepository implements IProductRepository {
   constructor(
