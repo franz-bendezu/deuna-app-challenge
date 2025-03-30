@@ -59,13 +59,7 @@ export class ProductCacheRepository implements IProductRepository {
   }
 
   async findAll(): Promise<Product[]> {
-    const cachedProducts = await this.cacheManager.get<Product[]>(
-      this.PRODUCTS_CACHE_KEY,
-    );
-    if (cachedProducts) {
-      return cachedProducts;
-    }
-    return [];
+    return this.getCachedProducts();
   }
 
   async findById(id: string): Promise<Product | null> {
