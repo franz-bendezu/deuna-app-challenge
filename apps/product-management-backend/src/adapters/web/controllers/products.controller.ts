@@ -25,7 +25,14 @@ import {
   FIND_PRODUCT_BY_ID_USECASE,
   UPDATE_PRODUCT_USECASE,
 } from '../../../domain/constants/injection-tokens';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @ApiTags('products')
 @Controller('products')
@@ -49,6 +56,10 @@ export class ProductsController {
     summary: 'Create a new product',
     description: 'Creates a new product in the system.',
   })
+  @ApiCreatedResponse({
+    description: 'The created product',
+    type: ProductDto,
+  })
   async create(@Body() createProductDto: BaseProductDto): Promise<ProductDto> {
     const productParams = ProductMapper.mapDtoToProduct(createProductDto);
     const createdProduct =
@@ -62,6 +73,11 @@ export class ProductsController {
     summary: 'Get all products',
     description: 'Retrieves all products from the system.',
   })
+  @ApiOkResponse({
+    description: 'List of products',
+    type: ProductDto,
+    isArray: true,
+  })
   async findAll(): Promise<ProductDto[]> {
     const products = await this.findAllProductsUseCase.execute();
     return products.map((product) => ProductMapper.mapToDto(product));
@@ -73,6 +89,13 @@ export class ProductsController {
     summary: 'Get a product by ID',
     description: 'Retrieves a product by its ID from the system.',
   })
+  @ApiOkResponse({
+    description: 'The product with the specified ID',
+    type: ProductDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'Product not found',
+  })
   async findOne(@Param('id') id: string) {
     const product = await this.findProductByIdUseCase.execute(id);
     return ProductMapper.mapToDto(product);
@@ -83,6 +106,14 @@ export class ProductsController {
   @ApiOperation({
     summary: 'Update a product',
     description: 'Updates an existing product in the system.',
+  })
+  @ApiOkResponse({
+    description: 'The updated product',
+    type: ProductDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Product not found',
   })
   async update(@Param('id') id: string, @Body() updateProductDto: ProductDto) {
     const params = ProductMapper.mapDtoToUpdateParams(updateProductDto);
