@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Product } from '../../../domain/models/product.model';
-import { IProductRepository } from '../../../application/repositories/product-repository.interface';
+import { IProductRepository } from '../../../application/repositories/product.repository.interface';
 import { IProductRow } from '../interfaces/product-row.interface';
 import { BaseProduct } from '../../../domain/models/base-product.model';
 import {
