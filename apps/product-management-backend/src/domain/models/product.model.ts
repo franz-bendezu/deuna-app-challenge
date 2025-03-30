@@ -7,6 +7,8 @@ export class Product extends BaseProduct {
     description: string,
     price: number,
     stock: number,
+    public createdAt: Date,
+    public updatedAt: Date,
   ) {
     super(name, description, price, stock);
   }
