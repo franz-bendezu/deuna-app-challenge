@@ -1,4 +1,5 @@
 import { InjectionToken } from '@nestjs/common';
+import { IProductRepository } from '../../application/repositories/product-repository.interface';
 import { ICreateProductUseCase } from '../usecases/create-product-usecase.interface';
 import { IFindAllProductsUseCase } from '../usecases/find-all-products-usecase.interface';
 import { IFindProductByIdUseCase } from '../usecases/find-product-by-id-usecase.interface';
