@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
+import { CacheModule } from '@nestjs/cache-manager';
 import envConfiguration from './config/env.config';
+import { cacheRedisFactory } from './config/cache.config';
 import { DATABASE_POOL, databasePoolFactory } from './config/database.config';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
