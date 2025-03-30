@@ -30,6 +30,6 @@ import { KAFKA_CLIENT, kafkaClientFactory } from './config/kafka.config';
       inject: [ConfigService],
     },
   ],
-  exports: [DATABASE_POOL, KAFKA_CLIENT],
+  exports: [DATABASE_POOL, KAFKA_CLIENT, CacheModule],
 })
 export class InfrastructureModule {}

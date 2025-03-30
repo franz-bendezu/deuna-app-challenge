@@ -2,15 +2,16 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ClientKafkaProxy } from '@nestjs/microservices';
 import { IProductPublisher } from '../../../domain/interfaces/event-publisher.interface';
 import { firstValueFrom } from 'rxjs';
-import { Product } from 'apps/product-management-backend/src/domain/models/product.model';
-import { ProductEvents } from 'apps/product-management-backend/src/domain/constants/events';
+import { Product } from '../../../domain/models/product.model';
+import { ProductEvents } from '../../../domain/constants/events';
+import { KAFKA_CLIENT } from '../../../infrastructure/config/kafka.config';
 
 @Injectable()
 export class ProductPublisher implements IProductPublisher {
   private readonly logger = new Logger(ProductPublisher.name);
 
   constructor(
-    @Inject('KAFKA_CLIENT')
+    @Inject(KAFKA_CLIENT)
     private readonly kafkaClient: ClientKafkaProxy,
   ) {}
 
