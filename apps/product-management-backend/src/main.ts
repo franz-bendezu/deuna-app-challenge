@@ -12,7 +12,9 @@ async function bootstrap() {
     .addTag('products')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, documentFactory);
+  SwaggerModule.setup('swagger', app, documentFactory, {
+    jsonDocumentUrl: 'swagger/json',
+  });
   await app.listen(process.env.port ?? 3000);
 }
 bootstrap();
