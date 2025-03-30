@@ -13,6 +13,7 @@ import { KAFKA_CLIENT, kafkaClientFactory } from './config/kafka.config';
     }),
     ConfigModule,
     CacheModule.registerAsync({
+      imports: [ConfigModule],
       useFactory: cacheRedisFactory,
       inject: [ConfigService],
     }),
