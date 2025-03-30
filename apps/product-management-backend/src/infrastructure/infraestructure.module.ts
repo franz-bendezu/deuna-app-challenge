@@ -9,6 +9,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       load: [envConfiguration],
     }),
     ConfigModule,
+    CacheModule.registerAsync({
+      useFactory: cacheRedisFactory,
+      inject: [ConfigService],
+    }),
   ],
   providers: [
     {
