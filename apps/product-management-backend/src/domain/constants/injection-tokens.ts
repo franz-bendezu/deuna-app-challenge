@@ -6,6 +6,9 @@ import { IFindProductByIdUseCase } from '../usecases/find-product-by-id-usecase.
 import { IUpdateProductUseCase } from '../usecases/update-product-usecase.interface';
 import { IDeleteProductUseCase } from '../usecases/delete-product-usecase.interface';
 
+// Repositories
+export const PRODUCT_REPOSITORY: InjectionToken<IProductRepository> =
+  'PRODUCT_REPOSITORY';
 // Use Cases
 export const CREATE_PRODUCT_USECASE: InjectionToken<ICreateProductUseCase> =
   'CREATE_PRODUCT_USECASE';
