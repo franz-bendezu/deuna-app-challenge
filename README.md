@@ -20,21 +20,39 @@ La aplicación utiliza las siguientes tecnologías:
 
 ```mermaid
 graph TD
-    Client[Aplicaciones Cliente\n(Web/Mobile)] <--> BFF[Product BFF\n(GraphQL/REST)]
-    BFF <--> Backend[Backend de Gestión\nde Productos]
-    BFF --> Redis[Redis Cache]
-    Backend --> PostgreSQL[PostgreSQL DB]
-    PostgreSQL --> Kafka[Kafka\nMessage Broker]
+    classDef client fill:#f9f9f9,stroke:#333,stroke-width:2px;
+    classDef service fill:#d9edf7,stroke:#31708f,stroke-width:2px;
+    classDef database fill:#dff0d8,stroke:#3c763d,stroke-width:2px;
+    classDef messaging fill:#fcf8e3,stroke:#8a6d3b,stroke-width:2px;
+    classDef container fill:#f5f5f5,stroke:#555,stroke-width:2px,dashed;
+
+    Client["fa:fa-mobile Aplicaciones Cliente (Web/Mobile)"] --> |GraphQL API| BFF["fa:fa-exchange BFF de Gestión de Productos"]
+    BFF --> |REST API| Backend["fa:fa-cogs Backend de Gestión de Productos"]
     
-    classDef client fill:#f9f9f9,stroke:#333,stroke-width:1px;
-    classDef service fill:#d9edf7,stroke:#31708f,stroke-width:1px;
-    classDef database fill:#dff0d8,stroke:#3c763d,stroke-width:1px;
-    classDef messaging fill:#fcf8e3,stroke:#8a6d3b,stroke-width:1px;
-    
+    Backend -->|Cacheo de datos| Redis["fa:fa-bolt Redis (Cache)"]
+    Backend -->|Consulta/Escritura| PostgreSQL["fa:fa-database PostgreSQL (Base de Datos)"]
+    Backend -->|Envío de eventos| Kafka["fa:fa-paper-plane Kafka (Message Broker)"]
+    Kafka --> Zookeeper["fa:fa-cogs Zookeeper (Para Kafka)"]
+    Kafka --> KafkaUI["fa:fa-tachometer-alt Kafka UI"]
+
     class Client client;
     class BFF,Backend service;
-    class Redis,PostgreSQL database;
-    class Kafka messaging;
+    class Redis,PostgreSQL,Zookeeper database;
+    class Kafka,KafkaUI messaging;
+
+    subgraph BackendSystem["Core"]
+        Backend
+        Redis
+        PostgreSQL
+        Kafka
+        Zookeeper
+    end
+    subgraph ClientSystem["Cliente"]
+        Client
+    end
+    subgraph Monitoring["Monitoreo"]
+        KafkaUI
+    end
 ```
 
 ## Configuración del Entorno
