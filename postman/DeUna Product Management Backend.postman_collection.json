@@ -1,0 +1,237 @@
+{
+	"info": {
+		"_postman_id": "d62d8339-9140-4cb8-9d3e-6a797856b640",
+		"name": "DeUna Product Management Backend",
+		"description": "Colección para probar la API REST del Backend de Gestión de Productos",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10123236"
+	},
+	"item": [
+		{
+			"name": "Productos",
+			"item": [
+				{
+					"name": "Obtener todos los productos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{backend_url}}/products",
+							"host": [
+								"{{backend_url}}"
+							],
+							"path": [
+								"products"
+							]
+						},
+						"description": "Obtiene el catálogo completo de productos disponibles"
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener producto por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{backend_url}}/products/1",
+							"host": [
+								"{{backend_url}}"
+							],
+							"path": [
+								"products",
+								"1"
+							]
+						},
+						"description": "Busca y devuelve la información de un producto específico mediante su ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Crear nuevo producto",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Nuevo Producto\",\n    \"descripcion\": \"Descripción detallada del nuevo producto\",\n    \"precio\": 99.99,\n    \"stock\": 100\n}"
+						},
+						"url": {
+							"raw": "{{backend_url}}/products",
+							"host": [
+								"{{backend_url}}"
+							],
+							"path": [
+								"products"
+							]
+						},
+						"description": "Registra un nuevo producto en el catálogo del sistema"
+					},
+					"response": [
+						{
+							"name": "Ejemplo de respuesta",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"nombre\": \"Nuevo Producto\",\n    \"descripcion\": \"Descripción detallada del nuevo producto\",\n    \"precio\": 99.99,\n    \"stock\": 100\n}"
+								},
+								"url": {
+									"raw": "{{backend_url}}/products",
+									"host": [
+										"{{backend_url}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"id\": \"1\",\n    \"nombre\": \"Nuevo Producto\",\n    \"descripcion\": \"Descripción detallada del nuevo producto\",\n    \"precio\": 99.99,\n    \"stock\": 100,\n    \"fechaCreacion\": \"2023-08-01T12:00:00.000Z\",\n    \"fechaActualizacion\": \"2023-08-01T12:00:00.000Z\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Actualizar producto",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"1\",\n    \"nombre\": \"Producto Actualizado\",\n    \"descripcion\": \"Nueva descripción del producto actualizado\",\n    \"precio\": 129.99,\n    \"stock\": 50\n}"
+						},
+						"url": {
+							"raw": "{{backend_url}}/products/1",
+							"host": [
+								"{{backend_url}}"
+							],
+							"path": [
+								"products",
+								"1"
+							]
+						},
+						"description": "Actualiza la información de un producto existente en el catálogo"
+					},
+					"response": [
+						{
+							"name": "Ejemplo de respuesta",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"1\",\n    \"nombre\": \"Producto Actualizado\",\n    \"descripcion\": \"Nueva descripción del producto actualizado\",\n    \"precio\": 129.99,\n    \"stock\": 50\n}"
+								},
+								"url": {
+									"raw": "{{backend_url}}/products/1",
+									"host": [
+										"{{backend_url}}"
+									],
+									"path": [
+										"products",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"id\": \"1\",\n    \"nombre\": \"Producto Actualizado\",\n    \"descripcion\": \"Nueva descripción del producto actualizado\",\n    \"precio\": 129.99,\n    \"stock\": 50,\n    \"fechaCreacion\": \"2023-08-01T12:00:00.000Z\",\n    \"fechaActualizacion\": \"2023-08-01T13:00:00.000Z\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Eliminar producto",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{backend_url}}/products/1",
+							"host": [
+								"{{backend_url}}"
+							],
+							"path": [
+								"products",
+								"1"
+							]
+						},
+						"description": "Elimina permanentemente un producto del catálogo"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Documentación Swagger",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{backend_url}}/swagger",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"swagger"
+					]
+				},
+				"description": "Accede a la documentación interactiva de la API mediante Swagger UI"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "backend_url",
+			"value": "http://localhost:3001",
+			"type": "string"
+		}
+	]
+}

@@ -1,0 +1,294 @@
+{
+	"info": {
+		"_postman_id": "3236233f-0a4a-42f7-befd-fd0223c25f2d",
+		"name": "DeUna Integration Tests",
+		"description": "Pruebas de integración para validar el flujo completo entre BFF y Backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10123236"
+	},
+	"item": [
+		{
+			"name": "Flujo Completo de Producto",
+			"item": [
+				{
+					"name": "1. Crear Producto (Backend)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"// Guardar ID para usar en las siguientes pruebas",
+									"var jsonData = pm.response.json();",
+									"pm.environment.set(\"test_product_id\", jsonData.id);",
+									"",
+									"// Validar respuesta",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Producto creado correctamente\", function () {",
+									"    pm.expect(jsonData.nombre).to.eql(\"Producto de Prueba\");",
+									"    pm.expect(jsonData.precio).to.eql(99.99);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Producto de Prueba\",\n    \"descripcion\": \"Producto creado para pruebas de integración\",\n    \"precio\": 99.99,\n    \"stock\": 100\n}"
+						},
+						"url": {
+							"raw": "{{backend_url}}/products",
+							"host": [
+								"{{backend_url}}"
+							],
+							"path": [
+								"products"
+							]
+						},
+						"description": "Crea un producto de prueba en el backend"
+					},
+					"response": []
+				},
+				{
+					"name": "2. Verificar Producto (BFF)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"// Validar respuesta",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"BFF muestra el producto correctamente\", function () {",
+									"    pm.expect(jsonData.data.product.id).to.eql(pm.environment.get(\"test_product_id\"));",
+									"    pm.expect(jsonData.data.product.nombre).to.eql(\"Producto de Prueba\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query($id: String!) {\n  product(id: $id) {\n    id\n    nombre\n    descripcion\n    precio\n    stock\n    fechaCreacion\n    fechaActualizacion\n  }\n}",
+								"variables": "{\n  \"id\": \"{{test_product_id}}\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{bff_url}}/graphql",
+							"host": [
+								"{{bff_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "Verifica que el producto creado en el backend sea accesible desde el BFF"
+					},
+					"response": []
+				},
+				{
+					"name": "3. Actualizar Producto (BFF)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"// Validar respuesta",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Producto actualizado correctamente desde BFF\", function () {",
+									"    pm.expect(jsonData.data.updateProduct.nombre).to.eql(\"Producto Actualizado\");",
+									"    pm.expect(jsonData.data.updateProduct.precio).to.eql(149.99);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation($id: String!, $input: UpdateProductInput!) {\n  updateProduct(id: $id, input: $input) {\n    id\n    nombre\n    descripcion\n    precio\n    stock\n    fechaCreacion\n    fechaActualizacion\n  }\n}",
+								"variables": "{\n  \"id\": \"{{test_product_id}}\",\n  \"input\": {\n    \"nombre\": \"Producto Actualizado\",\n    \"descripcion\": \"Este producto ha sido actualizado a través del BFF\",\n    \"precio\": 149.99,\n    \"stock\": 75\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{bff_url}}/graphql",
+							"host": [
+								"{{bff_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "Actualiza el producto utilizando la API GraphQL del BFF"
+					},
+					"response": []
+				},
+				{
+					"name": "4. Verificar Actualización (Backend)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"// Validar respuesta",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Los cambios se reflejan en el backend\", function () {",
+									"    pm.expect(jsonData.nombre).to.eql(\"Producto Actualizado\");",
+									"    pm.expect(jsonData.precio).to.eql(149.99);",
+									"    pm.expect(jsonData.stock).to.eql(75);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{backend_url}}/products/{{test_product_id}}",
+							"host": [
+								"{{backend_url}}"
+							],
+							"path": [
+								"products",
+								"{{test_product_id}}"
+							]
+						},
+						"description": "Verifica que los cambios realizados a través del BFF se reflejen en el Backend"
+					},
+					"response": []
+				},
+				{
+					"name": "5. Eliminar Producto (Backend)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"// Validar respuesta",
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{backend_url}}/products/{{test_product_id}}",
+							"host": [
+								"{{backend_url}}"
+							],
+							"path": [
+								"products",
+								"{{test_product_id}}"
+							]
+						},
+						"description": "Elimina el producto de prueba del backend"
+					},
+					"response": []
+				},
+				{
+					"name": "6. Verificar Eliminación (BFF)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"// Validamos que la respuesta contiene un error por producto no encontrado",
+									"pm.test(\"El BFF debe reportar error al buscar el producto eliminado\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.errors).to.exist;",
+									"    pm.expect(jsonData.errors[0].message).to.include(\"not found\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query($id: String!) {\n  product(id: $id) {\n    id\n    nombre\n  }\n}",
+								"variables": "{\n  \"id\": \"{{test_product_id}}\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{bff_url}}/graphql",
+							"host": [
+								"{{bff_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "Verifica que el producto eliminado en el backend no sea accesible desde el BFF"
+					},
+					"response": []
+				}
+			],
+			"description": "Serie de pruebas que validan el flujo completo de operaciones CRUD entre el BFF y el Backend"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

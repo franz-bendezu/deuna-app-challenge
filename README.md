@@ -199,16 +199,83 @@ pnpm build
 pnpm start:prod
 ```
 
-## Colección Postman
+## Postman
+A continuación se detalla cómo utilizar las colecciones Postman proporcionadas para probar la API de gestión de productos.
 
-Se incluye una colección Postman en el repositorio para probar los endpoints API. Puedes importarla en tu aplicación Postman desde:
+### Colecciones
 
-`/postman/Product-Management-API.postman_collection.json`
+1. **Product-Management-BFF.postman_collection.json** - Para probar la API GraphQL del BFF
+2. **Product-Management-Backend.postman_collection.json** - Para probar la API REST del Backend
+3. **DeUna-Integration-Tests.postman_collection.json** - Pruebas de integración que cubren flujos completos entre BFF y Backend
 
-Para usar la colección:
-1. Importa la colección en Postman
-2. Configura un entorno con la variable `base_url` apuntando a tu endpoint API (predeterminado: http://localhost:3000)
-3. Ejecuta las solicitudes
+### Configuración del entorno
+
+La colección utiliza variables de entorno para facilitar las pruebas en diferentes ambientes. Se proporciona un archivo de entorno predeterminado:
+
+- **DeUna-Environment.postman_environment.json**
+
+### Variables de entorno
+
+- `backend_url`: URL base para el servicio Backend (predeterminado: http://localhost:3000)
+- `bff_url`: URL base para el servicio BFF (predeterminado: http://localhost:3001)
+
+
+### Guía de uso
+
+#### Importar las colecciones y el entorno
+
+1. Abre Postman
+2. Haz clic en "Import" en la esquina superior izquierda
+3. Importa los 4 archivos JSON (colecciones y el entorno) haciendo clic en los seleccionados o arrastrnadolos.
+4. Confirma la importación
+
+#### Seleccionar el entorno
+
+1. Debes seleccionar "DeUna Environment" del menú desplegable de entornos
+
+#### Pruebas de la API BFF (GraphQL)
+
+La colección BFF contiene solicitudes para:
+- Obtener todos los productos
+- Obtener un producto por ID
+- Crear un nuevo producto
+- Actualizar un producto existente
+- Eliminar un producto
+
+Todas las operaciones se realizan a través del endpoint `/graphql` utilizando diferentes queries y mutations.
+
+#### Pruebas de la API Backend (REST)
+
+La colección Backend contiene solicitudes para:
+- Obtener todos los productos (GET /products)
+- Obtener un producto por ID (GET /products/{id})
+- Crear un nuevo producto (POST /products)
+- Actualizar un producto (PUT /products/{id})
+- Eliminar un producto (DELETE /products/{id})
+- Acceder a la documentación Swagger (GET /swagger)
+
+#### Ejecución de las pruebas de integración
+
+La colección de pruebas de integración está diseñada para ejecutarse secuencialmente y validar que:
+1. Se pueda crear un producto en el Backend
+2. El producto sea accesible desde el BFF
+3. Se pueda actualizar el producto desde el BFF
+4. Los cambios se reflejen en el Backend
+5. Se pueda eliminar el producto desde el Backend
+6. El BFF reporte correctamente que el producto ya no existe
+
+Para ejecutar todas las pruebas:
+1. Abre la colección "DeUna Integration Tests"
+2. Haz clic en los tres puntos (...) junto a "Flujo Completo de Producto"
+3. Selecciona "Run"
+4. Haz clic en "Run Flujo Completo de Producto"
+
+### Notas adicionales
+
+- Las colecciones incluyen pruebas automatizadas (con scripts de test) que validan las respuestas
+- Algunas solicitudes almacenan automáticamente datos (como IDs) en variables para usarlos en solicitudes posteriores
+- Las colecciones están documentadas con descripciones detalladas para cada solicitud
+
 
 ## Ejemplos de API
 
