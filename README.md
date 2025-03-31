@@ -200,7 +200,7 @@ pnpm start:prod
 ```
 
 ## Postman
-A continuación se detalla cómo utilizar las colecciones Postman proporcionadas para probar la API de gestión de productos.
+A continuación se detalla cómo utilizar las colecciones Postman proporcionadas para probar la API de gestión de productos, los archivos se encuentran en la carpeta `postman` del proyecto.
 
 ### Colecciones
 
