@@ -7,6 +7,8 @@ export interface IBaseProduct {
 
 export interface IProductResponse extends IBaseProduct {
   id: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export type CreateProductRequest = IBaseProduct;

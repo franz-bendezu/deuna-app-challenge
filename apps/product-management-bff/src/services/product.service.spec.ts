@@ -36,6 +36,8 @@ describe('ProductService', () => {
     price: 100,
     description: 'Test Description',
     stock: 12,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   };
 
   beforeEach(async () => {

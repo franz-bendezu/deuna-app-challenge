@@ -1,94 +1,121 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { ProductManagementBffModule } from './../src/product-management-bff.module';
-import { HttpService } from '@nestjs/axios';
-import { of } from 'rxjs';
+import { INestApplication, HttpException, HttpStatus } from '@nestjs/common';
+import { ProductManagementBffModule } from '../src/product-management-bff.module';
+import { ProductService } from '../src/services/product.service';
+import {
+  CreateProductInput,
+  UpdateProductInput,
+} from '../src/dto/product.input';
+import { ProductDTO } from '../src/dto/product.output';
+import { Server } from 'net';
+import { ApiError } from '../src/exceptions/api-error.exception';
 
-describe('ProductManagementBffController (e2e)', () => {
-  let app: INestApplication;
-  let httpService: HttpService;
+const products: ProductDTO[] = [
+  {
+    id: '1',
+    name: 'Product 1',
+    description: 'Description 1',
+    price: 100,
+    stock: 10,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: '2',
+    name: 'Product 2',
+    description: 'Description 2',
+    price: 200,
+    stock: 20,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: '3',
+    name: 'Product 3',
+    description: 'Description 3',
+    price: 300,
+    stock: 30,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+];
 
-  const mockProduct = {
-    id: '12345',
-    name: 'Test Product',
-    description: 'A product for e2e testing',
-    price: 99.99,
-    category: 'test',
-    imageUrl: 'http://example.com/image.jpg',
-    stock: 100,
-  };
+const gql = '/graphql';
 
-  const mockProducts = [
-    mockProduct,
-    {
-      id: '67890',
-      name: 'Another Product',
-      description: 'Another product description',
-      price: 49.99,
-      category: 'test',
-      imageUrl: 'http://example.com/another-image.jpg',
-      stock: 50,
-    },
-  ];
+describe('GraphQL ProductResolver (e2e)', () => {
+  let app: INestApplication<Server>;
+  let productService: ProductService;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [ProductManagementBffModule],
     })
-      .overrideProvider(HttpService)
+      .overrideProvider(ProductService)
       .useValue({
-        get: jest.fn().mockImplementation((url) => {
-          if (url.includes('/products/12345')) {
-            return of({
-              data: mockProduct,
-              status: 200,
-              statusText: 'OK',
-              headers: {},
-              config: {},
-            });
-          } else if (url.includes('/products')) {
-            return of({
-              data: mockProducts,
-              status: 200,
-              statusText: 'OK',
-              headers: {},
-              config: {},
-            });
+        findAll: jest.fn().mockResolvedValue(products),
+        findOne: jest
+          .fn()
+          .mockImplementation((id: string): Promise<ProductDTO> => {
+            const product = products.find((p) => p.id === id);
+            if (!product) {
+              throw new ApiError(
+                new Error('Product not found'),
+                'Product not found',
+                HttpStatus.NOT_FOUND,
+              );
+            }
+            return Promise.resolve(product);
+          }),
+        create: jest
+          .fn()
+          .mockImplementation(
+            (input: CreateProductInput): Promise<ProductDTO> => {
+              const newProduct: ProductDTO = {
+                id: '4',
+                ...input,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+              };
+              return Promise.resolve(newProduct);
+            },
+          ),
+        update: jest
+          .fn()
+          .mockImplementation(
+            (id: string, input: UpdateProductInput): Promise<ProductDTO> => {
+              const product = products.find((p) => p.id === id);
+              if (!product) {
+                throw new ApiError(
+                  new Error('Product not found'),
+                  'Product not found',
+                  HttpStatus.NOT_FOUND,
+                );
+              }
+              const updatedProduct: ProductDTO = {
+                ...product,
+                ...input,
+                updatedAt: new Date().toISOString(),
+              };
+              return Promise.resolve(updatedProduct);
+            },
+          ),
+        remove: jest.fn().mockImplementation((id: string): Promise<boolean> => {
+          const product = products.find((p) => p.id === id);
+          if (!product) {
+            throw new ApiError(
+              new Error('Product not found'),
+              'Product not found',
+              HttpStatus.NOT_FOUND,
+            );
           }
-        }),
-        post: jest.fn().mockImplementation(() => {
-          return of({
-            data: mockProduct,
-            status: 201,
-            statusText: 'Created',
-            headers: {},
-            config: {},
-          });
-        }),
-        put: jest.fn().mockImplementation(() => {
-          return of({
-            data: { ...mockProduct, name: 'Updated Product' },
-            status: 200,
-            statusText: 'OK',
-            headers: {},
-            config: {},
-          });
-        }),
-        delete: jest.fn().mockImplementation(() => {
-          return of({
-            data: null,
-            status: 204,
-            statusText: 'No Content',
-            headers: {},
-            config: {},
-          });
+          return Promise.resolve(true);
         }),
       })
       .compile();
 
     app = moduleFixture.createNestApplication();
-    httpService = moduleFixture.get<HttpService>(HttpService);
+    productService = moduleFixture.get<ProductService>(ProductService);
     await app.init();
   });
 
@@ -96,71 +123,208 @@ describe('ProductManagementBffController (e2e)', () => {
     await app.close();
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
-  });
+  describe(gql, () => {
+    describe('products', () => {
+      it('should get the products array', () => {
+        return request(app.getHttpServer())
+          .post(gql)
+          .send({
+            query: `
+              { 
+                products {
+                  id
+                  name
+                  description
+                  price
+                  stock
+                  createdAt
+                  updatedAt
+                }
+              }
+            `,
+          })
+          .expect(200)
+          .expect((res) => {
+            expect(res.body.data.products).toEqual(products);
+            expect(productService.findAll).toHaveBeenCalled();
+          });
+      });
 
-  describe('Products API', () => {
-    it('should fetch all products', () => {
-      return request(app.getHttpServer())
-        .get('/products')
-        .expect(200)
-        .expect((res) => {
-          expect(Array.isArray(res.body)).toBe(true);
-          expect(res.body.length).toBe(2);
-          expect(res.body[0].id).toBe('12345');
+      describe('one product', () => {
+        it('should get a single product', () => {
+          return request(app.getHttpServer())
+            .post(gql)
+            .send({
+              query: `
+                {
+                  product(id: "2") {
+                    id
+                    name
+                    description
+                    price
+                    stock
+                    createdAt
+                    updatedAt
+                  }
+                }
+              `,
+            })
+            .expect(200)
+            .expect((res) => {
+              expect(res.body.data.product).toEqual(products[1]);
+              expect(productService.findOne).toHaveBeenCalledWith('2');
+            });
         });
-    });
 
-    it('should fetch a product by id', () => {
-      return request(app.getHttpServer())
-        .get('/products/12345')
-        .expect(200)
-        .expect((res) => {
-          expect(res.body.id).toBe('12345');
-          expect(res.body.name).toBe('Test Product');
+        it('should get an error for bad id', () => {
+          return request(app.getHttpServer())
+            .post(gql)
+            .send({
+              query: `
+                {
+                  product(id: "999") {
+                    id
+                    name
+                    description
+                    price
+                    stock
+                    createdAt
+                    updatedAt
+                  }
+                }
+              `,
+            })
+            .expect(200)
+            .expect((res) => {
+              expect(res.body.errors).toBeDefined();
+              expect(res.body.data).toBe(null);
+              expect(productService.findOne).toHaveBeenCalledWith('999');
+            });
         });
-    });
+      });
 
-    it('should create a new product', () => {
-      const newProduct = {
-        name: 'New Product',
-        description: 'Brand new product',
-        price: 129.99,
-        category: 'new',
-        imageUrl: 'http://example.com/new-image.jpg',
-        stock: 75,
-      };
+      it('should create a new product', () => {
+        const newProductInput: CreateProductInput = {
+          name: 'New Product',
+          description: 'New description',
+          price: 400,
+          stock: 40,
+        };
 
-      return request(app.getHttpServer())
-        .post('/products')
-        .send(newProduct)
-        .expect(201)
-        .expect((res) => {
-          expect(res.body.id).toBeDefined();
-        });
-    });
+        return request(app.getHttpServer())
+          .post(gql)
+          .send({
+            query: `
+              mutation {
+                createProduct(input: {
+                  name: "New Product",
+                  description: "New description",
+                  price: 400,
+                  stock: 40
+                }) {
+                  id
+                  name
+                  description
+                  price
+                  stock
+                  createdAt
+                  updatedAt
+                }
+              }
+            `,
+          })
+          .expect(200)
+          .expect((res) => {
+            expect(res.body.data.createProduct).toMatchObject({
+              id: '4',
+              name: 'New Product',
+              description: 'New description',
+              price: 400,
+              stock: 40,
+            });
+            expect(productService.create).toHaveBeenCalledWith(newProductInput);
+          });
+      });
 
-    it('should update a product', () => {
-      const updatedProduct = {
-        ...mockProduct,
-        name: 'Updated Product',
-      };
+      it('should update an existing product', () => {
+        const updateProductInput: UpdateProductInput = {
+          name: 'Updated Product',
+          price: 250,
+        };
 
-      return request(app.getHttpServer())
-        .put('/products/12345')
-        .send(updatedProduct)
-        .expect(200)
-        .expect((res) => {
-          expect(res.body.name).toBe('Updated Product');
-        });
-    });
+        return request(app.getHttpServer())
+          .post(gql)
+          .send({
+            query: `
+              mutation {
+                updateProduct(
+                  id: "2", 
+                  input: {
+                    name: "Updated Product",
+                    price: 250
+                  }
+                ) {
+                  id
+                  name
+                  description
+                  price
+                  stock
+                  createdAt
+                  updatedAt
+                }
+              }
+            `,
+          })
+          .expect(200)
+          .expect((res) => {
+            expect(res.body.data.updateProduct).toMatchObject({
+              id: '2',
+              name: 'Updated Product',
+              description: 'Description 2',
+              price: 250,
+              stock: 20,
+            });
+            expect(productService.update).toHaveBeenCalledWith(
+              '2',
+              updateProductInput,
+            );
+          });
+      });
 
-    it('should delete a product', () => {
-      return request(app.getHttpServer()).delete('/products/12345').expect(204);
+      it('should delete a product', () => {
+        return request(app.getHttpServer())
+          .post(gql)
+          .send({
+            query: `
+              mutation {
+                deleteProduct(id: "3")
+              }
+            `,
+          })
+          .expect(200)
+          .expect((res) => {
+            expect(res.body.data.deleteProduct).toBe(true);
+            expect(productService.remove).toHaveBeenCalledWith('3');
+          });
+      });
+
+      it('should handle error when deleting non-existent product', () => {
+        return request(app.getHttpServer())
+          .post(gql)
+          .send({
+            query: `
+              mutation {
+                deleteProduct(id: "999")
+              }
+            `,
+          })
+          .expect(200)
+          .expect((res) => {
+            expect(res.body.errors).toBeDefined();
+            expect(res.body.data).toBe(null);
+            expect(productService.remove).toHaveBeenCalledWith('999');
+          });
+      });
     });
   });
 });

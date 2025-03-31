@@ -12,4 +12,8 @@ export class ProductDTO {
   price: number;
   @Field()
   stock: number;
+  @Field()
+  createdAt: string;
+  @Field()
+  updatedAt: string;
 }
