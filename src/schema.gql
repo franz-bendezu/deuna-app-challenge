@@ -8,6 +8,8 @@ type ProductDTO {
   description: String!
   price: Float!
   stock: Float!
+  createdAt: String!
+  updatedAt: String!
 }
 
 type Query {
