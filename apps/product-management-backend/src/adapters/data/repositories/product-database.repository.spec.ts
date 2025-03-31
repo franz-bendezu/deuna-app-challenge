@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ProductDatabaseRepository } from './product-database.repository';
 import {
   DB_CLIENT,
-  DBClient,
+  DBClientProduct,
 } from '../../../infrastructure/config/database.config';
 import { Product } from '../../../domain/models/product.model';
 import { IProductRow } from '../interfaces/product-row.interface';
@@ -11,7 +11,7 @@ import { Decimal } from '@prisma/client/runtime/library';
 describe('ProductDatabaseRepository', () => {
   let repository: ProductDatabaseRepository;
   let mockPrismaClient: jest.Mocked<{
-    product: jest.Mocked<DBClient['product']>;
+    product: jest.Mocked<DBClientProduct>;
   }>;
 
   beforeEach(async () => {
