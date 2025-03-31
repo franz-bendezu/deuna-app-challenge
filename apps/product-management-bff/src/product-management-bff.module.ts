@@ -4,7 +4,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
 import { ProductService } from './services/product.service';
-import { ProductResolver } from './graphql/resolvers/product.resolver';
+import { ProductResolver } from './resolvers/product.resolver';
 import configuration from './config/configuration';
 import { join } from 'path';
 
