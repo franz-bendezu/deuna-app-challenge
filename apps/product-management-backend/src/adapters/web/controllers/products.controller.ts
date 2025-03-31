@@ -31,13 +31,15 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 
 @ApiTags('products')
-@Controller('products')
+@Controller(ProductsController.PATH)
 export class ProductsController {
+  static readonly PATH = 'products';
+  static readonly PATH_ID_PARAM = 'id';
+  static readonly PATH_ID = `:${ProductsController.PATH_ID_PARAM}`;
   constructor(
     @Inject(CREATE_PRODUCT_USECASE)
     private readonly createProductUseCase: ICreateProductUseCase,
@@ -84,7 +86,7 @@ export class ProductsController {
     return products.map((product) => ProductMapper.mapToDto(product));
   }
 
-  @Get(':id')
+  @Get(ProductsController.PATH_ID)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Get a product by ID',
@@ -102,7 +104,7 @@ export class ProductsController {
     return ProductMapper.mapToDto(product);
   }
 
-  @Put(':id')
+  @Put(ProductsController.PATH_ID)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Update a product',
@@ -121,7 +123,7 @@ export class ProductsController {
     return ProductMapper.mapToDto(updatedProduct);
   }
 
-  @Delete(':id')
+  @Delete(ProductsController.PATH_ID)
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({
     summary: 'Delete a product',
