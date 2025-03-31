@@ -18,6 +18,9 @@ La aplicación utiliza las siguientes tecnologías:
 
 ## Diagrama de Arquitectura
 
+Si no se visualiza lo puede aquí:
+ [Diagrama de Arquitectura](./ARCHITECTURE.png)
+
 ```mermaid
 graph TD
     classDef client fill:#f9f9f9,stroke:#333,stroke-width:2px;
