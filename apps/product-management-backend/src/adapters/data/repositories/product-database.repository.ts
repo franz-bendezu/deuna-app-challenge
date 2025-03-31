@@ -37,36 +37,35 @@ export class ProductDatabaseRepository implements IProductRepository {
       where: { id },
     });
 
-    if (!result) {
-      return null;
-    }
-
-    return ProductMapper.fromRowtoEntity(result);
+    return result ? ProductMapper.fromRowtoEntity(result) : null;
   }
 
   async updateById(id: string, params: BaseProduct): Promise<Product | null> {
-    const result = await this.dbClient.product.update({
-      where: { id },
-      data: {
-        name: params.name,
-        description: params.description,
-        price: params.price,
-        stock: params.stock,
-      },
-    });
+    try {
+      const result = await this.dbClient.product.update({
+        where: { id },
+        data: {
+          name: params.name,
+          description: params.description,
+          price: params.price,
+          stock: params.stock,
+        },
+      });
 
-    if (!result) {
+      return ProductMapper.fromRowtoEntity(result);
+    } catch {
       return null;
     }
-
-    return ProductMapper.fromRowtoEntity(result);
   }
 
   async deleteById(id: string): Promise<boolean> {
-    const result = await this.dbClient.product.delete({
-      where: { id },
-    });
-
-    return !!result;
+    try {
+      await this.dbClient.product.delete({
+        where: { id },
+      });
+      return true;
+    } catch {
+      return false;
+    }
   }
 }

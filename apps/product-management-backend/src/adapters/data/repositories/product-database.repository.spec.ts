@@ -5,22 +5,24 @@ import {
   DBClient,
 } from '../../../infrastructure/config/database.config';
 import { Product } from '../../../domain/models/product.model';
-import {
-  QUERY_CREATE_PRODUCT,
-  QUERY_DELETE_PRODUCT,
-  QUERY_FIND_ALL_PRODUCTS,
-  QUERY_FIND_PRODUCT_BY_ID,
-  QUERY_UPDATE_PRODUCT,
-} from './query/product.queries';
 import { IProductRow } from '../interfaces/product-row.interface';
+import { Decimal } from '@prisma/client/runtime/library';
 
 describe('ProductDatabaseRepository', () => {
   let repository: ProductDatabaseRepository;
-  let mockPool: jest.Mocked<DBClient>;
+  let mockPrismaClient: jest.Mocked<{
+    product: jest.Mocked<DBClient['product']>;
+  }>;
 
   beforeEach(async () => {
-    mockPool = {
-      query: jest.fn(),
+    mockPrismaClient = {
+      product: {
+        findMany: jest.fn(),
+        findUnique: jest.fn(),
+        create: jest.fn(),
+        update: jest.fn(),
+        delete: jest.fn(),
+      },
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -28,7 +30,7 @@ describe('ProductDatabaseRepository', () => {
         ProductDatabaseRepository,
         {
           provide: DB_CLIENT,
-          useValue: mockPool,
+          useValue: mockPrismaClient,
         },
       ],
     }).compile();
@@ -59,7 +61,7 @@ describe('ProductDatabaseRepository', () => {
           id: PRODUCT_ID_1,
           name: PRODUCT_NAME_1,
           description: PRODUCT_DESCRIPTION_1,
-          price: PRODUCT_PRICE_1,
+          price: new Decimal(PRODUCT_PRICE_1),
           stock: PRODUCT_STOCK_1,
           createdAt: PRODUCT_CREATED_AT_1,
           updatedAt: PRODUCT_UPDATED_AT_1,
@@ -68,7 +70,7 @@ describe('ProductDatabaseRepository', () => {
           id: PRODUCT_ID_2,
           name: PRODUCT_NAME_2,
           description: PRODUCT_DESCRIPTION_2,
-          price: PRODUCT_PRICE_2,
+          price: new Decimal(PRODUCT_PRICE_2),
           stock: PRODUCT_STOCK_2,
           createdAt: PRODUCT_CREATED_AT_2,
           updatedAt: PRODUCT_UPDATED_AT_2,
@@ -95,28 +97,20 @@ describe('ProductDatabaseRepository', () => {
         ),
       ];
 
-      mockPool.query.mockImplementation(() => {
-        return {
-          rows: mockRows,
-        };
-      });
+      mockPrismaClient.product.findMany.mockResolvedValue(mockRows);
 
       const result = await repository.findAll();
 
-      expect(mockPool.query).toHaveBeenCalledWith(QUERY_FIND_ALL_PRODUCTS);
+      expect(mockPrismaClient.product.findMany).toHaveBeenCalled();
       expect(result).toEqual(mockProducts);
     });
 
     it('should return an empty array if no products are found', async () => {
-      mockPool.query.mockImplementation(() => {
-        return {
-          rows: [],
-        };
-      });
+      mockPrismaClient.product.findMany.mockResolvedValue([]);
 
       const result = await repository.findAll();
 
-      expect(mockPool.query).toHaveBeenCalledWith(QUERY_FIND_ALL_PRODUCTS);
+      expect(mockPrismaClient.product.findMany).toHaveBeenCalled();
       expect(result).toEqual([]);
     });
   });
@@ -134,7 +128,7 @@ describe('ProductDatabaseRepository', () => {
         id: PRODUCT_ID,
         name: PRODUCT_NAME,
         description: PRODUCT_DESCRIPTION,
-        price: PRODUCT_PRICE,
+        price: new Decimal(PRODUCT_PRICE),
         stock: PRODUCT_STOCK,
         createdAt: PRODUCT_CREATED_AT,
         updatedAt: PRODUCT_UPDATED_AT,
@@ -149,34 +143,26 @@ describe('ProductDatabaseRepository', () => {
         PRODUCT_UPDATED_AT,
       );
 
-      mockPool.query.mockImplementation(() => {
-        return {
-          rows: [mockRow],
-        };
-      });
+      mockPrismaClient.product.findUnique.mockResolvedValue(mockRow);
 
       const result = await repository.findById(PRODUCT_ID);
 
-      expect(mockPool.query).toHaveBeenCalledWith(QUERY_FIND_PRODUCT_BY_ID, [
-        PRODUCT_ID,
-      ]);
+      expect(mockPrismaClient.product.findUnique).toHaveBeenCalledWith({
+        where: { id: PRODUCT_ID },
+      });
       expect(result).toEqual(mockProduct);
     });
 
     it('should return null if no product is found', async () => {
       const PRODUCT_ID = '1';
 
-      mockPool.query.mockImplementation(() => {
-        return {
-          rows: [],
-        };
-      });
+      mockPrismaClient.product.findUnique.mockResolvedValue(null);
 
       const result = await repository.findById(PRODUCT_ID);
 
-      expect(mockPool.query).toHaveBeenCalledWith(QUERY_FIND_PRODUCT_BY_ID, [
-        PRODUCT_ID,
-      ]);
+      expect(mockPrismaClient.product.findUnique).toHaveBeenCalledWith({
+        where: { id: PRODUCT_ID },
+      });
       expect(result).toBeNull();
     });
   });
@@ -194,7 +180,7 @@ describe('ProductDatabaseRepository', () => {
         id: PRODUCT_ID,
         name: PRODUCT_NAME,
         description: PRODUCT_DESCRIPTION,
-        price: PRODUCT_PRICE,
+        price: new Decimal(PRODUCT_PRICE),
         stock: PRODUCT_STOCK,
         createdAt: PRODUCT_CREATED_AT,
         updatedAt: PRODUCT_UPDATED_AT,
@@ -209,11 +195,7 @@ describe('ProductDatabaseRepository', () => {
         PRODUCT_UPDATED_AT,
       );
 
-      mockPool.query.mockImplementation(() => {
-        return {
-          rows: [mockRow],
-        };
-      });
+      mockPrismaClient.product.create.mockResolvedValue(mockRow);
 
       const result = await repository.create({
         name: PRODUCT_NAME,
@@ -222,12 +204,14 @@ describe('ProductDatabaseRepository', () => {
         stock: PRODUCT_STOCK,
       });
 
-      expect(mockPool.query).toHaveBeenCalledWith(QUERY_CREATE_PRODUCT, [
-        PRODUCT_NAME,
-        PRODUCT_DESCRIPTION,
-        PRODUCT_PRICE,
-        PRODUCT_STOCK,
-      ]);
+      expect(mockPrismaClient.product.create).toHaveBeenCalledWith({
+        data: {
+          name: PRODUCT_NAME,
+          description: PRODUCT_DESCRIPTION,
+          price: PRODUCT_PRICE,
+          stock: PRODUCT_STOCK,
+        },
+      });
       expect(result).toEqual(mockProduct);
     });
   });
@@ -245,7 +229,7 @@ describe('ProductDatabaseRepository', () => {
         id: PRODUCT_ID,
         name: PRODUCT_NAME,
         description: PRODUCT_DESCRIPTION,
-        price: PRODUCT_PRICE,
+        price: new Decimal(PRODUCT_PRICE),
         stock: PRODUCT_STOCK,
         createdAt: PRODUCT_CREATED_AT,
         updatedAt: PRODUCT_UPDATED_AT,
@@ -260,11 +244,7 @@ describe('ProductDatabaseRepository', () => {
         PRODUCT_UPDATED_AT,
       );
 
-      mockPool.query.mockImplementation(() => {
-        return {
-          rows: [mockRow],
-        };
-      });
+      mockPrismaClient.product.update.mockResolvedValue(mockRow);
 
       const result = await repository.updateById(PRODUCT_ID, {
         name: PRODUCT_NAME,
@@ -273,37 +253,45 @@ describe('ProductDatabaseRepository', () => {
         stock: PRODUCT_STOCK,
       });
 
-      expect(mockPool.query).toHaveBeenCalledWith(QUERY_UPDATE_PRODUCT, [
-        PRODUCT_NAME,
-        PRODUCT_DESCRIPTION,
-        PRODUCT_PRICE,
-        PRODUCT_ID,
-      ]);
+      expect(mockPrismaClient.product.update).toHaveBeenCalledWith({
+        where: { id: PRODUCT_ID },
+        data: {
+          name: PRODUCT_NAME,
+          description: PRODUCT_DESCRIPTION,
+          price: PRODUCT_PRICE,
+          stock: PRODUCT_STOCK,
+        },
+      });
       expect(result).toEqual(mockProduct);
     });
 
     it('should return null if no product is updated', async () => {
       const PRODUCT_ID = '1';
+      const PRODUCT_NAME = 'Updated Product';
+      const PRODUCT_DESCRIPTION = 'Updated Description';
+      const PRODUCT_PRICE = 150;
+      const PRODUCT_STOCK = 15;
 
-      mockPool.query.mockImplementation(() => {
-        return {
-          rows: [],
-        };
-      });
+      mockPrismaClient.product.update.mockRejectedValue(
+        new Error('Product not found'),
+      );
 
       const result = await repository.updateById(PRODUCT_ID, {
-        name: 'Updated Product',
-        description: 'Updated Description',
-        price: 150,
-        stock: 15,
+        name: PRODUCT_NAME,
+        description: PRODUCT_DESCRIPTION,
+        price: PRODUCT_PRICE,
+        stock: PRODUCT_STOCK,
       });
 
-      expect(mockPool.query).toHaveBeenCalledWith(QUERY_UPDATE_PRODUCT, [
-        'Updated Product',
-        'Updated Description',
-        150,
-        PRODUCT_ID,
-      ]);
+      expect(mockPrismaClient.product.update).toHaveBeenCalledWith({
+        where: { id: PRODUCT_ID },
+        data: {
+          name: PRODUCT_NAME,
+          description: PRODUCT_DESCRIPTION,
+          price: PRODUCT_PRICE,
+          stock: PRODUCT_STOCK,
+        },
+      });
       expect(result).toBeNull();
     });
   });
@@ -312,34 +300,36 @@ describe('ProductDatabaseRepository', () => {
     it('should delete a product and return true', async () => {
       const PRODUCT_ID = '1';
 
-      mockPool.query.mockImplementation(() => {
-        return {
-          rows: [{}],
-        };
+      mockPrismaClient.product.delete.mockResolvedValue({
+        id: PRODUCT_ID,
+        name: 'Product 1',
+        description: 'Description 1',
+        price: new Decimal(100),
+        stock: 10,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       });
 
       const result = await repository.deleteById(PRODUCT_ID);
 
-      expect(mockPool.query).toHaveBeenCalledWith(QUERY_DELETE_PRODUCT, [
-        PRODUCT_ID,
-      ]);
+      expect(mockPrismaClient.product.delete).toHaveBeenCalledWith({
+        where: { id: PRODUCT_ID },
+      });
       expect(result).toBe(true);
     });
 
     it('should return false if no product is deleted', async () => {
       const PRODUCT_ID = '1';
 
-      mockPool.query.mockImplementation(() => {
-        return {
-          rows: [],
-        };
-      });
+      mockPrismaClient.product.delete.mockRejectedValue(
+        new Error('Product not found'),
+      );
 
       const result = await repository.deleteById(PRODUCT_ID);
 
-      expect(mockPool.query).toHaveBeenCalledWith(QUERY_DELETE_PRODUCT, [
-        PRODUCT_ID,
-      ]);
+      expect(mockPrismaClient.product.delete).toHaveBeenCalledWith({
+        where: { id: PRODUCT_ID },
+      });
       expect(result).toBe(false);
     });
   });

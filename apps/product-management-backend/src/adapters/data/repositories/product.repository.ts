@@ -6,6 +6,7 @@ import {
   PRODUCT_CACHE_REPOSITORY,
   PRODUCT_DB_REPOSITORY,
 } from '../../data/constants/injection-tokens.constant';
+import { console } from 'inspector';
 
 export class ProductRepository implements IProductRepository {
   constructor(
@@ -54,6 +55,7 @@ export class ProductRepository implements IProductRepository {
   }
 
   async deleteById(id: string): Promise<boolean> {
+    console.log('Deleting product with ID:', id);
     const result = await this.productDatabaseRepository.deleteById(id);
     if (result) {
       await this.productCacheRepository.deleteById(id);
