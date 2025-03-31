@@ -34,7 +34,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-@ApiTags('products')
+@ApiTags('productos')
 @Controller(ProductsController.PATH)
 export class ProductsController {
   static readonly PATH = 'products';
@@ -56,11 +56,11 @@ export class ProductsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
-    summary: 'Create a new product',
-    description: 'Creates a new product in the system.',
+    summary: 'Crear producto',
+    description: 'Registra un nuevo producto en el catálogo del sistema.',
   })
   @ApiCreatedResponse({
-    description: 'The created product',
+    description: 'Producto creado exitosamente',
     type: ProductDTO,
   })
   async create(@Body() createProductDto: BaseProductDto): Promise<ProductDTO> {
@@ -73,11 +73,11 @@ export class ProductsController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'Get all products',
-    description: 'Retrieves all products from the system.',
+    summary: 'Listar productos',
+    description: 'Obtiene el catálogo completo de productos disponibles.',
   })
   @ApiOkResponse({
-    description: 'List of products',
+    description: 'Catálogo de productos',
     type: ProductDTO,
     isArray: true,
   })
@@ -89,15 +89,16 @@ export class ProductsController {
   @Get(ProductsController.PATH_ID)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'Get a product by ID',
-    description: 'Retrieves a product by its ID from the system.',
+    summary: 'Consultar producto',
+    description:
+      'Busca y devuelve la información de un producto específico mediante su ID.',
   })
   @ApiOkResponse({
-    description: 'The product with the specified ID',
+    description: 'Información detallada del producto',
     type: ProductDTO,
   })
   @ApiNotFoundResponse({
-    description: 'Product not found',
+    description: 'No se encontró el producto solicitado',
   })
   async findOne(
     @Param(ProductsController.PATH_ID_PARAM) id: string,
@@ -109,15 +110,16 @@ export class ProductsController {
   @Put(ProductsController.PATH_ID)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'Update a product',
-    description: 'Updates an existing product in the system.',
+    summary: 'Modificar producto',
+    description:
+      'Actualiza la información de un producto existente en el catálogo.',
   })
   @ApiOkResponse({
-    description: 'The updated product',
+    description: 'Información actualizada del producto',
     type: ProductDTO,
   })
   @ApiNotFoundResponse({
-    description: 'Product not found',
+    description: 'No se encontró el producto a actualizar',
   })
   async update(
     @Param(ProductsController.PATH_ID_PARAM) id: string,
@@ -131,14 +133,14 @@ export class ProductsController {
   @Delete(ProductsController.PATH_ID)
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({
-    summary: 'Delete a product',
-    description: 'Deletes a product from the system.',
+    summary: 'Eliminar producto',
+    description: 'Elimina permanentemente un producto del catálogo.',
   })
   @ApiNoContentResponse({
-    description: 'Product deleted successfully',
+    description: 'Producto eliminado correctamente',
   })
   @ApiNotFoundResponse({
-    description: 'Product not found',
+    description: 'No se encontró el producto a eliminar',
   })
   async remove(@Param('id') id: string) {
     await this.deleteProductUseCase.execute(id);

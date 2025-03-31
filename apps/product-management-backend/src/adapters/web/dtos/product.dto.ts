@@ -3,24 +3,24 @@ import { BaseProductDto } from './base-product.dto';
 import { ISharedProduct } from '@app/shared';
 
 @ApiSchema({
-  description: 'Product data transfer object',
+  description: 'Datos completos del producto',
 })
 export class ProductDTO extends BaseProductDto implements ISharedProduct {
   @ApiProperty({
-    description: 'The unique identifier of the product, usually a UUID',
+    description: 'Identificador único del producto',
     example: '123e4567-e89b-12d3-a456-426614174000',
     format: 'uuid',
   })
   id: string;
   @ApiProperty({
-    description: 'The date when the product was created',
+    description: 'Fecha de registro del producto en el sistema',
     example: '2023-10-01T12:00:00Z',
     type: 'string',
     format: 'date-time',
   })
   fechaCreacion: Date;
   @ApiProperty({
-    description: 'The date when the product was last updated',
+    description: 'Fecha de la última modificación realizada',
     example: '2023-10-02T12:00:00Z',
     type: 'string',
     format: 'date-time',
