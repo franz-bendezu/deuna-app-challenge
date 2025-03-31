@@ -6,7 +6,7 @@ import { AxiosHeaders, AxiosResponse } from 'axios';
 import { ProductService } from './product.service';
 import { ApiError } from '../exceptions/api-error.exception';
 import {
-  IProduct,
+  IProductResponse,
   CreateProductRequest,
   UpdateProductRequest,
 } from '../interfaces/product.interface';
@@ -30,7 +30,7 @@ describe('ProductService', () => {
     }),
   };
 
-  const mockProduct: IProduct = {
+  const mockProduct: IProductResponse = {
     id: '1',
     name: 'Test Product',
     price: 100,
@@ -57,7 +57,7 @@ describe('ProductService', () => {
 
   describe('findAll', () => {
     it('should return an array of products', async () => {
-      const response: AxiosResponse<IProduct[]> = {
+      const response: AxiosResponse<IProductResponse[]> = {
         data: [mockProduct],
         status: 200,
         statusText: 'OK',
@@ -86,7 +86,7 @@ describe('ProductService', () => {
 
   describe('findOne', () => {
     it('should return a single product', async () => {
-      const response: AxiosResponse<IProduct> = {
+      const response: AxiosResponse<IProductResponse> = {
         data: mockProduct,
         status: 200,
         statusText: 'OK',
@@ -121,7 +121,7 @@ describe('ProductService', () => {
         description: 'New Description',
         stock: 0,
       };
-      const response: AxiosResponse<IProduct> = {
+      const response: AxiosResponse<IProductResponse> = {
         data: mockProduct,
         status: 201,
         statusText: 'Created',
@@ -171,7 +171,7 @@ describe('ProductService', () => {
         price: 300,
         description: 'Updated Description',
       };
-      const response: AxiosResponse<IProduct> = {
+      const response: AxiosResponse<IProductResponse> = {
         data: mockProduct,
         status: 200,
         statusText: 'OK',

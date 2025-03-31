@@ -5,7 +5,7 @@ export interface IBaseProduct {
   stock: number;
 }
 
-export interface IProduct extends IBaseProduct {
+export interface IProductResponse extends IBaseProduct {
   id: string;
 }
 

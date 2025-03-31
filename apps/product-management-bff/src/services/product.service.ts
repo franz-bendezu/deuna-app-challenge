@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
 import { ApiError } from '../exceptions/api-error.exception';
 import {
-  IProduct,
+  IProductResponse,
   CreateProductRequest,
   UpdateProductRequest,
 } from '../interfaces/product.interface';
@@ -24,10 +24,10 @@ export class ProductService {
     this.API_URL = `${backendUrl}${productsEndpoint}`;
   }
 
-  async findAll(): Promise<IProduct[]> {
+  async findAll(): Promise<IProductResponse[]> {
     try {
       const { data } = await firstValueFrom(
-        this.httpService.get<IProduct[]>(this.API_URL),
+        this.httpService.get<IProductResponse[]>(this.API_URL),
       );
       return data;
     } catch (error) {
@@ -35,10 +35,10 @@ export class ProductService {
     }
   }
 
-  async findOne(id: string): Promise<IProduct> {
+  async findOne(id: string): Promise<IProductResponse> {
     try {
       const { data } = await firstValueFrom(
-        this.httpService.get<IProduct>(`${this.API_URL}/${id}`),
+        this.httpService.get<IProductResponse>(`${this.API_URL}/${id}`),
       );
       return data;
     } catch (error) {
@@ -46,10 +46,12 @@ export class ProductService {
     }
   }
 
-  async create(createProductDto: CreateProductRequest): Promise<IProduct> {
+  async create(
+    createProductDto: CreateProductRequest,
+  ): Promise<IProductResponse> {
     try {
       const { data } = await firstValueFrom(
-        this.httpService.post<IProduct>(this.API_URL, createProductDto),
+        this.httpService.post<IProductResponse>(this.API_URL, createProductDto),
       );
       return data;
     } catch (error) {
@@ -60,10 +62,10 @@ export class ProductService {
   async update(
     id: string,
     updateProductDto: UpdateProductRequest,
-  ): Promise<IProduct> {
+  ): Promise<IProductResponse> {
     try {
       const { data } = await firstValueFrom(
-        this.httpService.put<IProduct>(
+        this.httpService.put<IProductResponse>(
           `${this.API_URL}/${id}`,
           updateProductDto,
         ),
