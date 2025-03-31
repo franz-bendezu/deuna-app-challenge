@@ -1,98 +1,279 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Aplicación de Gestión de Productos
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Descripción Técnica
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Esta aplicación es un sistema de gestión de productos construido con NestJS, siguiendo una arquitectura de microservicios. Consta de dos servicios principales:
 
-## Description
+1. **BFF de Gestión de Productos (Backend-For-Frontend)**: Actúa como puerta de enlace API que maneja las solicitudes del cliente y se comunica con el servicio backend.
+2. **Backend de Gestión de Productos**: Servicio principal responsable de la lógica de negocio y operaciones de datos.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+La aplicación utiliza las siguientes tecnologías:
+- **NestJS**: Framework progresivo de Node.js para construir aplicaciones del lado del servidor eficientes y escalables
+- **GraphQL**: Lenguaje de consulta API utilizando Apollo Server para la capa BFF
+- **REST API**: Endpoints REST tradicionales para ciertas operaciones
+- **PostgreSQL**: Base de datos principal usando Prisma como ORM
+- **Redis**: Para caché y mejora del rendimiento
+- **Kafka**: Broker de mensajes para comunicación asíncrona entre servicios
+- **Docker**: Contenedorización para entornos de desarrollo y despliegue consistentes
 
-## Project setup
+## Diagrama de Arquitectura
 
-```bash
-$ pnpm install
+```mermaid
+graph TD
+    Client[Aplicaciones Cliente\n(Web/Mobile)] <--> BFF[Product BFF\n(GraphQL/REST)]
+    BFF <--> Backend[Backend de Gestión\nde Productos]
+    BFF --> Redis[Redis Cache]
+    Backend --> PostgreSQL[PostgreSQL DB]
+    PostgreSQL --> Kafka[Kafka\nMessage Broker]
+    
+    classDef client fill:#f9f9f9,stroke:#333,stroke-width:1px;
+    classDef service fill:#d9edf7,stroke:#31708f,stroke-width:1px;
+    classDef database fill:#dff0d8,stroke:#3c763d,stroke-width:1px;
+    classDef messaging fill:#fcf8e3,stroke:#8a6d3b,stroke-width:1px;
+    
+    class Client client;
+    class BFF,Backend service;
+    class Redis,PostgreSQL database;
+    class Kafka messaging;
 ```
 
-## Compile and run the project
+## Configuración del Entorno
 
+### Prerequisitos
+- Docker y Docker Compose
+- Node.js (v18+)
+- pnpm
+
+### Configuración con Docker Compose
+
+1. Clona el repositorio:
 ```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+git clone https://github.com/your-username/deuna-app-challenge.git
+cd deuna-app-challenge
 ```
 
-## Run tests
-
-```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+2. Crea un archivo `.env` en el directorio raíz con las siguientes variables:
+```
+DATABASE_URL="postgresql://postgres:postgres@postgres:5432/product_management?schema=public"
+REDIS_URL="redis://redis:6379"
+KAFKA_BROKER="kafka:9092"
+PORT=3000
+BACKEND_SERVICE_URL="http://product-management-backend:3001"
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
+3. Ejecuta Docker Compose:
 ```bash
-$ pnpm install -g mau
-$ mau deploy
+docker compose up
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Esto iniciará todos los servicios necesarios:
+- Base de datos PostgreSQL
+- Cache Redis
+- Broker Kafka
+- Servicio Backend de Gestión de Productos
+- Servicio BFF de Gestión de Productos
 
-## Resources
+### Configuración Manual (sin Docker)
 
-Check out a few resources that may come in handy when working with NestJS:
+1. Instala las dependencias:
+```bash
+pnpm install
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+2. Configura tus variables de entorno locales
 
-## Support
+3. Ejecuta las migraciones de la base de datos:
+```bash
+npx prisma migrate dev
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+4. Alimenta la base de datos:
+```bash
+npx prisma db seed
+```
 
-## Stay in touch
+5. Inicia los servicios:
+```bash
+pnpm start:dev:backend
+pnpm start:dev:bff
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Ejecución de Pruebas
 
-## License
+### Pruebas Unitarias
+```bash
+# Ejecutar todas las pruebas unitarias
+pnpm test
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+# Ejecutar pruebas en modo watch
+pnpm test:watch
+
+# Ejecutar pruebas con cobertura
+pnpm test:cov
+```
+
+### Pruebas End-to-End
+```bash
+# Ejecutar todas las pruebas e2e
+pnpm test:e2e
+
+# Ejecutar solo pruebas e2e de backend
+pnpm test:backend:e2e
+
+# Ejecutar solo pruebas e2e de BFF
+pnpm test:bff:e2e
+```
+
+### Depuración de Pruebas
+```bash
+pnpm test:debug
+```
+
+## Scripts Útiles
+
+### Desarrollo
+```bash
+# Iniciar ambos servicios en modo desarrollo
+pnpm start:dev
+
+# Iniciar solo el backend en modo desarrollo
+pnpm start:dev:backend
+
+# Iniciar solo el BFF en modo desarrollo
+pnpm start:dev:bff
+
+# Iniciar servicios en modo debug
+pnpm start:debug
+pnpm start:debug:backend
+pnpm start:debug:bff
+```
+
+### Gestión de Base de Datos
+```bash
+# Aplicar migraciones de base de datos
+npx prisma migrate dev
+
+# Generar cliente Prisma
+npx prisma generate
+
+# Alimentar la base de datos con datos iniciales
+npx prisma db seed
+```
+
+### Calidad de Código
+```bash
+# Formatear código con prettier
+pnpm format
+
+# Ejecutar linting
+pnpm lint
+```
+
+### Producción
+```bash
+# Construir la aplicación
+pnpm build
+
+# Iniciar en modo producción
+pnpm start:prod
+```
+
+## Colección Postman
+
+Se incluye una colección Postman en el repositorio para probar los endpoints API. Puedes importarla en tu aplicación Postman desde:
+
+`/postman/Product-Management-API.postman_collection.json`
+
+Para usar la colección:
+1. Importa la colección en Postman
+2. Configura un entorno con la variable `base_url` apuntando a tu endpoint API (predeterminado: http://localhost:3000)
+3. Ejecuta las solicitudes
+
+## Ejemplos de API
+
+### Ejemplos de GraphQL
+
+#### Consultar todos los productos
+```graphql
+query {
+  products {
+    id
+    name
+    price
+    description
+    stock
+  }
+}
+```
+
+#### Obtener producto por ID
+```graphql
+query {
+  product(id: "1") {
+    id
+    name
+    price
+    description
+    stock
+  }
+}
+```
+
+#### Crear nuevo producto
+```graphql
+mutation {
+  createProduct(
+    data: {
+      name: "Nuevo Producto"
+      price: 99.99
+      description: "Descripción del producto"
+      stock: 1
+    }
+  ) {
+    id
+    name
+    price
+  }
+}
+```
+
+### Ejemplos de API REST
+
+#### Obtener todos los productos
+```bash
+curl -X GET http://localhost:3000/api/products
+```
+
+#### Obtener producto por ID
+```bash
+curl -X GET http://localhost:3000/api/products/1
+```
+
+#### Crear nuevo producto
+```bash
+curl -X POST http://localhost:3000/api/products \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Nuevo Producto",
+    "price": 99.99,
+    "description": "Descripción del producto",
+    "stock": 12
+  }'
+```
+
+#### Actualizar producto
+```bash
+curl -X PUT http://localhost:3000/api/products/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Actualiado Producto",
+    "price": 99.99,
+    "description": "Descripción del producto",
+    "stock": 12
+  }'
+```
+
+#### Eliminar producto
+```bash
+curl -X DELETE http://localhost:3000/api/products/1
+```
