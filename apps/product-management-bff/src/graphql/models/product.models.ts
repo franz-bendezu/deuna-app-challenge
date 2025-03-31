@@ -1,21 +1,15 @@
-export class Product {
+import { Field, ObjectType } from '@nestjs/graphql';
+
+@ObjectType()
+export class ProductDTO {
+  @Field()
   id: string;
+  @Field()
   name: string;
+  @Field()
   description: string;
+  @Field()
   price: number;
+  @Field()
   stock: number;
-}
-
-export class CreateProductInput {
-  name: string;
-  description: string;
-  price: number;
-  stock: number;
-}
-
-export class UpdateProductInput {
-  name?: string;
-  description?: string;
-  price?: number;
-  stock?: number;
 }

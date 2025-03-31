@@ -5,8 +5,8 @@ import { firstValueFrom } from 'rxjs';
 import { ApiError } from '../exceptions/api-error.exception';
 import {
   IProduct,
-  CreateProductDto,
-  UpdateProductDto,
+  CreateProductRequest,
+  UpdateProductRequest,
 } from '../interfaces/product.interface';
 
 @Injectable()
@@ -46,7 +46,7 @@ export class ProductService {
     }
   }
 
-  async create(createProductDto: CreateProductDto): Promise<IProduct> {
+  async create(createProductDto: CreateProductRequest): Promise<IProduct> {
     try {
       const { data } = await firstValueFrom(
         this.httpService.post<IProduct>(this.API_URL, createProductDto),
@@ -59,7 +59,7 @@ export class ProductService {
 
   async update(
     id: string,
-    updateProductDto: UpdateProductDto,
+    updateProductDto: UpdateProductRequest,
   ): Promise<IProduct> {
     try {
       const { data } = await firstValueFrom(

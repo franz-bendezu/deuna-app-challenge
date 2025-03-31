@@ -9,5 +9,5 @@ export interface IProduct extends IBaseProduct {
   id: string;
 }
 
-export interface CreateProductDto extends IBaseProduct {}
-export interface UpdateProductDto extends Partial<IBaseProduct> {}
+export type CreateProductRequest = IBaseProduct;
+export type UpdateProductRequest = Partial<IBaseProduct>;
