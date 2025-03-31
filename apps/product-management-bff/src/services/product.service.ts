@@ -8,9 +8,10 @@ import {
   CreateProductRequest,
   UpdateProductRequest,
 } from '../interfaces/product.interface';
+import { IProductService } from './product.service.interface';
 
 @Injectable()
-export class ProductService {
+export class ProductService implements IProductService {
   private readonly API_URL: string;
 
   constructor(

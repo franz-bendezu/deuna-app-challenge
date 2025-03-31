@@ -10,6 +10,7 @@ import {
 import { ProductDTO } from '../src/dto/product.output';
 import { Server } from 'net';
 import { ApiError } from '../src/exceptions/api-error.exception';
+import { IProductService } from '../src/services/product.service.interface';
 
 const products: ProductDTO[] = [
   {
@@ -45,7 +46,7 @@ const gql = '/graphql';
 
 describe('GraphQL ProductResolver (e2e)', () => {
   let app: INestApplication<Server>;
-  let productService: ProductService;
+  let productService: IProductService;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -115,7 +116,7 @@ describe('GraphQL ProductResolver (e2e)', () => {
       .compile();
 
     app = moduleFixture.createNestApplication();
-    productService = moduleFixture.get<ProductService>(ProductService);
+    productService = moduleFixture.get<IProductService>(ProductService);
     await app.init();
   });
 
@@ -145,7 +146,12 @@ describe('GraphQL ProductResolver (e2e)', () => {
           })
           .expect(200)
           .expect((res) => {
-            expect(res.body.data.products).toEqual(products);
+            const body = res.body as {
+              data: {
+                products: ProductDTO[];
+              };
+            };
+            expect(body.data.products).toEqual(products);
             expect(productService.findAll).toHaveBeenCalled();
           });
       });
