@@ -14,13 +14,20 @@ export class ApiError extends HttpException {
     ) {
       const { response } = error;
 
-      const message = response?.data?.message || fallbackMessage;
+      const message =
+        response?.data?.message || response?.data || fallbackMessage;
       const statusCode = response?.status || fallbackStatus;
-      super({ message, statusCode }, statusCode);
+      super({ message, statusCode }, statusCode, {
+        cause: error,
+      });
     } else if (error instanceof Error) {
-      super({ message: error.message || fallbackMessage }, fallbackStatus);
+      super({ message: error.message || fallbackMessage }, fallbackStatus, {
+        cause: error,
+      });
     } else {
-      super({ message: fallbackMessage }, fallbackStatus);
+      super({ message: fallbackMessage }, fallbackStatus, {
+        cause: error,
+      });
     }
   }
 }
