@@ -1,11 +1,3 @@
-export interface DatabaseConfig {
-  host: string;
-  port: number;
-  username: string;
-  password: string;
-  database: string;
-}
-
 export interface CacheConfiguration {
   url: string;
   ttl: number;
@@ -23,8 +15,6 @@ interface AppConfiguration {
 }
 
 export interface EnvironmentConfig {
-  db: DatabaseConfig;
-
   redis: CacheConfiguration;
 
   kafka: KafkaConfiguration;
