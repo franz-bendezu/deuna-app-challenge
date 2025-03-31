@@ -11,7 +11,23 @@
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// This can be used to network with other containers or with the host.
-	"forwardPorts": [3000, 3001, 5432, 6379, 8080, 9092],
+	"forwardPorts": [
+		3000,
+		3001,
+		5432,
+		6379,
+		8080,
+		9092
+	],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"Prisma.prisma",
+				"dbaeumer.vscode-eslint",
+				"ms-azuretools.vscode-docker"
+			]
+		}
+	},
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "yarn install",

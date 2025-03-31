@@ -1,75 +1,72 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Product } from '../../../domain/models/product.model';
 import { IProductRepository } from '../../../application/repositories/product.repository.interface';
-import { IProductRow } from '../interfaces/product-row.interface';
 import { BaseProduct } from '../../../domain/models/base-product.model';
 import {
-  DATABASE_POOL,
-  DatabasePool,
+  DB_CLIENT,
+  DBClient,
 } from '../../../infrastructure/config/database.config';
 import { ProductMapper } from '../mappers/product.mapper';
-import {
-  QUERY_CREATE_PRODUCT,
-  QUERY_DELETE_PRODUCT,
-  QUERY_FIND_ALL_PRODUCTS,
-  QUERY_FIND_PRODUCT_BY_ID,
-  QUERY_UPDATE_PRODUCT,
-} from './query/product.queries';
-import { QueryResult } from 'pg';
 
 @Injectable()
 export class ProductDatabaseRepository implements IProductRepository {
   constructor(
-    @Inject(DATABASE_POOL)
-    private pool: DatabasePool,
+    @Inject(DB_CLIENT)
+    private dbClient: DBClient,
   ) {}
 
   async create(params: BaseProduct): Promise<Product> {
-    const result: QueryResult<IProductRow> = await this.pool.query<IProductRow>(
-      QUERY_CREATE_PRODUCT,
-      [params.name, params.description, params.price, params.stock],
-    );
-    return ProductMapper.fromRowtoEntity(result.rows[0]);
+    const result = await this.dbClient.product.create({
+      data: {
+        name: params.name,
+        description: params.description,
+        price: params.price,
+        stock: params.stock,
+      },
+    });
+    return ProductMapper.fromRowtoEntity(result);
   }
 
   async findAll(): Promise<Product[]> {
-    const result = await this.pool.query<IProductRow>(QUERY_FIND_ALL_PRODUCTS);
-    return result.rows.map((row) => ProductMapper.fromRowtoEntity(row));
+    const result = await this.dbClient.product.findMany();
+    return result.map((row) => ProductMapper.fromRowtoEntity(row));
   }
 
   async findById(id: string): Promise<Product | null> {
-    const result = await this.pool.query<IProductRow>(
-      QUERY_FIND_PRODUCT_BY_ID,
-      [id],
-    );
+    const result = await this.dbClient.product.findUnique({
+      where: { id },
+    });
 
-    if (result.rows.length === 0) {
+    if (!result) {
       return null;
     }
 
-    return ProductMapper.fromRowtoEntity(result.rows[0]);
+    return ProductMapper.fromRowtoEntity(result);
   }
 
   async updateById(id: string, params: BaseProduct): Promise<Product | null> {
-    const result = await this.pool.query<IProductRow>(QUERY_UPDATE_PRODUCT, [
-      params.name,
-      params.description,
-      params.price,
-      id,
-    ]);
+    const result = await this.dbClient.product.update({
+      where: { id },
+      data: {
+        name: params.name,
+        description: params.description,
+        price: params.price,
+        stock: params.stock,
+      },
+    });
 
-    if (result.rows.length === 0) {
+    if (!result) {
       return null;
     }
 
-    return ProductMapper.fromRowtoEntity(result.rows[0]);
+    return ProductMapper.fromRowtoEntity(result);
   }
 
   async deleteById(id: string): Promise<boolean> {
-    const result = await this.pool.query(QUERY_DELETE_PRODUCT, [id]);
-    if (result.rows.length === 0) {
-      return false;
-    }
-    return true;
+    const result = await this.dbClient.product.delete({
+      where: { id },
+    });
+
+    return !!result;
   }
 }

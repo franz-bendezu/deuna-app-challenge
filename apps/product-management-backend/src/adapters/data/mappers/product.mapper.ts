@@ -7,8 +7,8 @@ export class ProductMapper {
       data.id,
       data.name,
       data.description,
-      typeof data.price === 'string' ? parseFloat(data.price) : data.price,
-      typeof data.stock === 'string' ? parseInt(data.stock, 10) : data.stock,
+      data.price.toNumber(),
+      data.stock,
       data.createdAt,
       data.updatedAt,
     );

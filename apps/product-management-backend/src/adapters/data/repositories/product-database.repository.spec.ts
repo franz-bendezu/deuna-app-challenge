@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProductDatabaseRepository } from './product-database.repository';
 import {
-  DATABASE_POOL,
-  DatabasePool,
+  DB_CLIENT,
+  DBClient,
 } from '../../../infrastructure/config/database.config';
 import { Product } from '../../../domain/models/product.model';
 import {
@@ -16,7 +16,7 @@ import { IProductRow } from '../interfaces/product-row.interface';
 
 describe('ProductDatabaseRepository', () => {
   let repository: ProductDatabaseRepository;
-  let mockPool: jest.Mocked<DatabasePool>;
+  let mockPool: jest.Mocked<DBClient>;
 
   beforeEach(async () => {
     mockPool = {
@@ -27,7 +27,7 @@ describe('ProductDatabaseRepository', () => {
       providers: [
         ProductDatabaseRepository,
         {
-          provide: DATABASE_POOL,
+          provide: DB_CLIENT,
           useValue: mockPool,
         },
       ],

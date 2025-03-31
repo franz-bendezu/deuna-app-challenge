@@ -9,12 +9,12 @@ export default (): EnvironmentConfig => ({
     database: process.env.DB_NAME || 'product_management',
   },
   redis: {
-    url: process.env.REDIS_URL || 'redis://localhost:6379',
+    url: process.env.REDIS_URL || 'redis://redis:6379',
     ttl: parseInt(process.env.REDIS_TTL || '60000'),
     lruSize: parseInt(process.env.REDIS_LRU_SIZE || '5000'),
   },
   kafka: {
-    brokers: (process.env.KAFKA_BROKERS || 'localhost:9092').split(','),
+    brokers: (process.env.KAFKA_BROKERS || 'kafka:9092').split(','),
     clientId: process.env.KAFKA_CLIENT_ID || 'product-management-service',
   },
   app: {
