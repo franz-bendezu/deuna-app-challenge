@@ -18,14 +18,14 @@ export class ProductDTO extends BaseProductDto implements ISharedProduct {
     type: 'string',
     format: 'date-time',
   })
-  createdAt: Date;
+  fechaCreacion: Date;
   @ApiProperty({
     description: 'The date when the product was last updated',
     example: '2023-10-02T12:00:00Z',
     type: 'string',
     format: 'date-time',
   })
-  updatedAt: Date;
+  fechaActualizacion: Date;
   constructor(
     id: string,
     name: string,
@@ -36,12 +36,12 @@ export class ProductDTO extends BaseProductDto implements ISharedProduct {
     updatedAt: Date,
   ) {
     super();
-    this.name = name;
-    this.description = description;
-    this.price = price;
+    this.nombre = name;
+    this.descripcion = description;
+    this.precio = price;
     this.stock = stock;
     this.id = id;
-    this.createdAt = createdAt;
-    this.updatedAt = updatedAt;
+    this.fechaCreacion = createdAt;
+    this.fechaActualizacion = updatedAt;
   }
 }

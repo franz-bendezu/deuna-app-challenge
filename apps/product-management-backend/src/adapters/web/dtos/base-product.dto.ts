@@ -12,7 +12,7 @@ export class BaseProductDto implements IBaseSharedProduct {
     description: 'The name of the product',
     example: 'Product Name',
   })
-  name: string;
+  nombre: string;
 
   @IsNotEmpty()
   @IsString()
@@ -20,7 +20,7 @@ export class BaseProductDto implements IBaseSharedProduct {
     description: 'The description of the product',
     example: 'Product Description',
   })
-  description: string;
+  descripcion: string;
 
   @IsNumber({ maxDecimalPlaces: 2 })
   @ApiProperty({
@@ -28,7 +28,7 @@ export class BaseProductDto implements IBaseSharedProduct {
     example: 99.99,
   })
   @Min(0)
-  price: number;
+  precio: number;
 
   @IsInt()
   @ApiProperty({

@@ -9,12 +9,13 @@ import {
   UPDATE_PRODUCT_USECASE,
 } from '../../../domain/constants/injection-tokens';
 import { ProductMapper } from '../mappers/product.mapper';
-import { Product } from 'apps/product-management-backend/src/domain/models/product.model';
-import { ICreateProductUseCase } from 'apps/product-management-backend/src/domain/usecases/create-product-usecase.interface';
-import { IFindProductByIdUseCase } from 'apps/product-management-backend/src/domain/usecases/find-product-by-id-usecase.interface';
-import { IUpdateProductUseCase } from 'apps/product-management-backend/src/domain/usecases/update-product-usecase.interface';
-import { IDeleteProductUseCase } from 'apps/product-management-backend/src/domain/usecases/delete-product-usecase.interface';
+import { Product } from '../../../domain/models/product.model';
+import { ICreateProductUseCase } from '../../../domain/usecases/create-product-usecase.interface';
+import { IFindProductByIdUseCase } from '../../../domain/usecases/find-product-by-id-usecase.interface';
+import { IUpdateProductUseCase } from '../../../domain/usecases/update-product-usecase.interface';
+import { IDeleteProductUseCase } from '../../../domain/usecases/delete-product-usecase.interface';
 import { ProductDTO } from '../dtos/product.dto';
+import { BaseProductDto } from '../dtos/base-product.dto';
 
 describe('ProductsController', () => {
   let controller: ProductsController;
@@ -108,18 +109,21 @@ describe('ProductsController', () => {
 
     describe('create', () => {
       it('should create a product and return ProductDto', async () => {
-        const createProductDto = {
-          name: 'New Product',
-          price: 150,
-          description: 'A new product',
+        const createProductDto: BaseProductDto = {
+          nombre: 'New Product',
+          precio: 150,
+          descripcion: 'A new product',
           stock: 10,
         };
-        const createdProduct = {
-          id: '3',
-          ...createProductDto,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        };
+        const createdProduct: Product = new Product(
+          '1',
+          'New Product',
+          'A new product',
+          150,
+          10,
+          new Date(),
+          new Date(),
+        );
 
         createProductUseCase.execute.mockResolvedValue(createdProduct);
 
@@ -151,18 +155,22 @@ describe('ProductsController', () => {
         const productId = '1';
         const updateProductDto: ProductDTO = {
           id: '1',
-          name: 'Updated Product',
-          price: 120,
-          description: 'Updated description',
+          nombre: 'Updated Product',
+          precio: 120,
+          descripcion: 'Updated description',
           stock: 15,
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          fechaCreacion: new Date(),
+          fechaActualizacion: new Date(),
         };
-        const updatedProduct = {
-          ...updateProductDto,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        };
+        const updatedProduct = new Product(
+          '1',
+          'Updated Product',
+          'Updated description',
+          120,
+          15,
+          new Date(),
+          new Date(),
+        );
 
         updateProductUseCase.execute.mockResolvedValue(updatedProduct);
 

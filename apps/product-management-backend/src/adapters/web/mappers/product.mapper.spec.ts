@@ -36,9 +36,9 @@ describe('ProductMapper', () => {
   describe('mapDtoToProduct', () => {
     it('should map a BaseProductDto to a BaseProduct correctly', () => {
       const dto: BaseProductDto = {
-        name: 'Test Product',
-        description: 'This is a test product',
-        price: 100,
+        nombre: 'Test Product',
+        descripcion: 'This is a test product',
+        precio: 100,
         stock: 50,
       };
 

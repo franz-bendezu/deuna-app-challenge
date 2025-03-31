@@ -32,12 +32,12 @@ describe('ProductService', () => {
 
   const mockProduct: IProductResponse = {
     id: '1',
-    name: 'Test Product',
-    price: 100,
-    description: 'Test Description',
+    nombre: 'Test Product',
+    precio: 100,
+    descripcion: 'Test Description',
     stock: 12,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    fechaCreacion: new Date().toISOString(),
+    fechaActualizacion: new Date().toISOString(),
   };
 
   beforeEach(async () => {
@@ -118,9 +118,9 @@ describe('ProductService', () => {
   describe('create', () => {
     it('should create a new product', async () => {
       const createProductDto: ICreateProductRequest = {
-        name: 'New Product',
-        price: 200,
-        description: 'New Description',
+        nombre: 'New Product',
+        precio: 200,
+        descripcion: 'New Description',
         stock: 0,
       };
       const response: AxiosResponse<IProductResponse> = {
@@ -151,27 +151,31 @@ describe('ProductService', () => {
 
       await expect(
         service.create({
-          name: '',
-          price: 0,
-          description: '',
+          nombre: '',
+          precio: 0,
+          descripcion: '',
           stock: 0,
         }),
       ).rejects.toThrow(ApiError);
-      expect(spyPost).toHaveBeenCalledWith('http://mock-backend.com/products', {
-        name: '',
-        price: 0,
-        description: '',
+      const expected: ICreateProductRequest = {
+        nombre: '',
+        precio: 0,
+        descripcion: '',
         stock: 0,
-      });
+      };
+      expect(spyPost).toHaveBeenCalledWith(
+        'http://mock-backend.com/products',
+        expected,
+      );
     });
   });
 
   describe('update', () => {
     it('should update an existing product', async () => {
       const updateProductDto: IUpdateProductRequest = {
-        name: 'Updated Product',
-        price: 300,
-        description: 'Updated Description',
+        nombre: 'Updated Product',
+        precio: 300,
+        descripcion: 'Updated Description',
       };
       const response: AxiosResponse<IProductResponse> = {
         data: mockProduct,
@@ -200,7 +204,7 @@ describe('ProductService', () => {
         .mockReturnValue(throwError(() => new Error('Update failed')));
 
       await expect(
-        service.update('1', { name: '', price: 0, description: '' }),
+        service.update('1', { nombre: '', precio: 0, descripcion: '' }),
       ).rejects.toThrow(ApiError);
     });
   });

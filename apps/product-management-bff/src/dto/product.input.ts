@@ -7,13 +7,13 @@ import {
 @InputType()
 export class CreateProductInput implements ICreateProductRequest {
   @Field()
-  name: string;
+  nombre: string;
 
   @Field()
-  description: string;
+  descripcion: string;
 
   @Field()
-  price: number;
+  precio: number;
 
   @Field()
   stock: number;
@@ -22,13 +22,13 @@ export class CreateProductInput implements ICreateProductRequest {
 @InputType()
 export class UpdateProductInput implements IUpdateProductRequest {
   @Field({ nullable: true })
-  name?: string;
+  nombre?: string;
 
   @Field({ nullable: true })
-  description?: string;
+  descripcion?: string;
 
   @Field({ nullable: true })
-  price?: number;
+  precio?: number;
 
   @Field({ nullable: true })
   stock?: number;

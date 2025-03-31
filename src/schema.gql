@@ -4,12 +4,12 @@
 
 type ProductDTO {
   id: String!
-  name: String!
-  description: String!
-  price: Float!
+  nombre: String!
+  descripcion: String!
+  precio: Float!
   stock: Float!
-  createdAt: String!
-  updatedAt: String!
+  fechaCreacion: String!
+  fechaActualizacion: String!
 }
 
 type Query {
@@ -24,15 +24,15 @@ type Mutation {
 }
 
 input CreateProductInput {
-  name: String!
-  description: String!
-  price: Float!
+  nombre: String!
+  descripcion: String!
+  precio: Float!
   stock: Float!
 }
 
 input UpdateProductInput {
-  name: String
-  description: String
-  price: Float
+  nombre: String
+  descripcion: String
+  precio: Float
   stock: Float
 }

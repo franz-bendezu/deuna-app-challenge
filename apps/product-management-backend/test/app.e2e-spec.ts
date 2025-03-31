@@ -11,16 +11,16 @@ describe('Products Controller (e2e)', () => {
   let createdProductId: string;
 
   const testProduct: BaseProductDto = {
-    name: 'Test Product',
-    description: 'A product for e2e testing',
-    price: 99.99,
+    nombre: 'Test Product',
+    descripcion: 'A product for e2e testing',
+    precio: 99.99,
     stock: 100,
   };
 
   const updatedProduct: BaseProductDto = {
-    name: 'Updated Test Product',
-    description: 'Updated description for testing',
-    price: 199.99,
+    nombre: 'Updated Test Product',
+    descripcion: 'Updated description for testing',
+    precio: 199.99,
     stock: 50,
   };
 
@@ -45,9 +45,9 @@ describe('Products Controller (e2e)', () => {
       .expect((res: request.Response) => {
         const body = res.body as ProductDTO;
         expect(body).toHaveProperty('id');
-        expect(body.name).toBe(testProduct.name);
-        expect(body.description).toBe(testProduct.description);
-        expect(body.price).toBe(testProduct.price);
+        expect(body.nombre).toBe(testProduct.nombre);
+        expect(body.descripcion).toBe(testProduct.descripcion);
+        expect(body.precio).toBe(testProduct.precio);
         createdProductId = body.id; // Store for later tests
       });
   });
@@ -70,7 +70,7 @@ describe('Products Controller (e2e)', () => {
       .expect((res) => {
         const body = res.body as ProductDTO;
         expect(body).toHaveProperty('id', createdProductId);
-        expect(body).toBe(testProduct.name);
+        expect(body).toBe(testProduct.nombre);
       });
   });
 
@@ -82,9 +82,9 @@ describe('Products Controller (e2e)', () => {
       .expect((res) => {
         const body = res.body as ProductDTO;
         expect(body).toHaveProperty('id', createdProductId);
-        expect(body.name).toBe(updatedProduct.name);
-        expect(body.description).toBe(updatedProduct.description);
-        expect(body.price).toBe(updatedProduct.price);
+        expect(body.nombre).toBe(updatedProduct.nombre);
+        expect(body.descripcion).toBe(updatedProduct.descripcion);
+        expect(body.precio).toBe(updatedProduct.precio);
       });
   });
 

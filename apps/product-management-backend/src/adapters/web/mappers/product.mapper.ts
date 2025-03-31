@@ -17,10 +17,10 @@ export class ProductMapper {
   }
 
   static mapDtoToProduct(dto: BaseProductDto): BaseProduct {
-    return new BaseProduct(dto.name, dto.description, dto.price, dto.stock);
+    return new BaseProduct(dto.nombre, dto.descripcion, dto.precio, dto.stock);
   }
 
   static mapDtoToUpdateParams(dto: ProductDTO): BaseProduct {
-    return new BaseProduct(dto.name, dto.description, dto.price, dto.stock);
+    return new BaseProduct(dto.nombre, dto.descripcion, dto.precio, dto.stock);
   }
 }

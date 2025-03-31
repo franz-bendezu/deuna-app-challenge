@@ -6,15 +6,15 @@ export class ProductDTO implements IProductResponse {
   @Field()
   id: string;
   @Field()
-  name: string;
+  nombre: string;
   @Field()
-  description: string;
+  descripcion: string;
   @Field()
-  price: number;
+  precio: number;
   @Field()
   stock: number;
   @Field()
-  createdAt: string;
+  fechaCreacion: string;
   @Field()
-  updatedAt: string;
+  fechaActualizacion: string;
 }

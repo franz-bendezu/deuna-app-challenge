@@ -202,7 +202,7 @@ describe('GraphQL ProductResolver (e2e)', () => {
             expect(body.data.updateProduct).toMatchObject({
               id: targetProduct.id,
               name: 'Updated Product',
-              description: targetProduct.description,
+              description: targetProduct.descripcion,
               price: 250,
               stock: targetProduct.stock,
             });

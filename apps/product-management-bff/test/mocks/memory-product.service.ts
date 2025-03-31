@@ -12,30 +12,30 @@ export class MemoryProductService implements IProductService {
   private products: ProductDTO[] = [
     {
       id: randomUUID(),
-      name: 'Product 1',
-      description: 'Description 1',
-      price: 100,
+      nombre: 'Product 1',
+      descripcion: 'Description 1',
+      precio: 100,
       stock: 10,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      fechaCreacion: new Date().toISOString(),
+      fechaActualizacion: new Date().toISOString(),
     },
     {
       id: randomUUID(),
-      name: 'Product 2',
-      description: 'Description 2',
-      price: 200,
+      nombre: 'Product 2',
+      descripcion: 'Description 2',
+      precio: 200,
       stock: 20,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      fechaCreacion: new Date().toISOString(),
+      fechaActualizacion: new Date().toISOString(),
     },
     {
       id: randomUUID(),
-      name: 'Product 3',
-      description: 'Description 3',
-      price: 300,
+      nombre: 'Product 3',
+      descripcion: 'Description 3',
+      precio: 300,
       stock: 30,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      fechaCreacion: new Date().toISOString(),
+      fechaActualizacion: new Date().toISOString(),
     },
   ];
 
@@ -59,8 +59,8 @@ export class MemoryProductService implements IProductService {
     const newProduct: ProductDTO = {
       id: randomUUID(),
       ...input,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      fechaCreacion: new Date().toISOString(),
+      fechaActualizacion: new Date().toISOString(),
     };
     this.products.push(newProduct);
     return Promise.resolve({ ...newProduct });
@@ -79,7 +79,7 @@ export class MemoryProductService implements IProductService {
     const updatedProduct: ProductDTO = {
       ...this.products[productIndex],
       ...input,
-      updatedAt: new Date().toISOString(),
+      fechaActualizacion: new Date().toISOString(),
     };
 
     this.products[productIndex] = updatedProduct;
