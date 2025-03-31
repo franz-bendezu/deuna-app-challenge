@@ -5,7 +5,7 @@ import { ProductManagementBffModule } from '../src/product-management-bff.module
 import { ProductService } from '../src/services/product.service';
 import { ProductDTO } from '../src/dto/product.output';
 import { Server } from 'net';
-import { MemoryProductService } from './mocks/in-memory-product.service';
+import { MemoryProductService } from './mocks/memory-product.service';
 
 const gql = '/graphql';
 
