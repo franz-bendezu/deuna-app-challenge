@@ -29,8 +29,8 @@ input CreateProductInput {
 }
 
 input UpdateProductInput {
-  name: String!
-  description: String!
-  price: Float!
-  stock: Float!
+  name: String
+  description: String
+  price: Float
+  stock: Float
 }
