@@ -99,7 +99,9 @@ export class ProductsController {
   @ApiNotFoundResponse({
     description: 'Product not found',
   })
-  async findOne(@Param('id') id: string) {
+  async findOne(
+    @Param(ProductsController.PATH_ID_PARAM) id: string,
+  ): Promise<ProductDto> {
     const product = await this.findProductByIdUseCase.execute(id);
     return ProductMapper.mapToDto(product);
   }
@@ -117,7 +119,10 @@ export class ProductsController {
   @ApiNotFoundResponse({
     description: 'Product not found',
   })
-  async update(@Param('id') id: string, @Body() updateProductDto: ProductDto) {
+  async update(
+    @Param(ProductsController.PATH_ID_PARAM) id: string,
+    @Body() updateProductDto: ProductDto,
+  ) {
     const params = ProductMapper.mapDtoToUpdateParams(updateProductDto);
     const updatedProduct = await this.updateProductUseCase.execute(id, params);
     return ProductMapper.mapToDto(updatedProduct);
