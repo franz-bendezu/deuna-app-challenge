@@ -277,9 +277,9 @@ Para ejecutar todas las pruebas:
 - Las colecciones están documentadas con descripciones detalladas para cada solicitud
 
 
-## Ejemplos de API
+## Ejemplos
 
-### Ejemplos de GraphQL
+### Ejemplos de BBF
 
 #### Consultar todos los productos
 ```graphql
@@ -325,7 +325,7 @@ mutation {
 }
 ```
 
-### Ejemplos de API REST
+### Ejemplos de Backend
 
 #### Obtener todos los productos
 ```bash
