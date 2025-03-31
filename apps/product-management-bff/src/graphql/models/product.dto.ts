@@ -5,11 +5,14 @@ import { IsDecimal, IsInt } from 'class-validator';
 export class CreateProductInput {
   @Field()
   name: string;
+
   @Field()
   description: string;
+
   @Field()
   @IsDecimal()
   price: number;
+
   @Field()
   @IsInt()
   stock: number;
@@ -19,11 +22,14 @@ export class CreateProductInput {
 export class UpdateProductInput {
   @Field()
   name: string;
+
   @Field()
   description: string;
+
   @Field()
   @IsDecimal()
   price: number;
+
   @Field()
   @IsInt()
   stock: number;
