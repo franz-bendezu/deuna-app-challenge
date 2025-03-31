@@ -4,6 +4,7 @@ import { ProductManagementBackendModule } from './../src/product-management-back
 import { INestApplication } from '@nestjs/common';
 import { Server } from 'net';
 import { BaseProductDto } from '../src/adapters/web/dtos/base-product.dto';
+import { ProductDto } from '../src/adapters/web/dtos/product.dto';
 
 describe('Products Controller (e2e)', () => {
   let app: INestApplication<Server>;
@@ -41,12 +42,13 @@ describe('Products Controller (e2e)', () => {
       .post('/products')
       .send(testProduct)
       .expect(201)
-      .expect((res) => {
-        expect(res.body).toHaveProperty('id');
-        expect(res.body.name).toBe(testProduct.name);
-        expect(res.body.description).toBe(testProduct.description);
-        expect(res.body.price).toBe(testProduct.price);
-        createdProductId = res.body.id; // Store for later tests
+      .expect((res: request.Response) => {
+        const body = res.body as ProductDto;
+        expect(body).toHaveProperty('id');
+        expect(body.name).toBe(testProduct.name);
+        expect(body.description).toBe(testProduct.description);
+        expect(body.price).toBe(testProduct.price);
+        createdProductId = body.id; // Store for later tests
       });
   });
 
@@ -55,8 +57,9 @@ describe('Products Controller (e2e)', () => {
       .get('/products')
       .expect(200)
       .expect((res) => {
-        expect(Array.isArray(res.body)).toBe(true);
-        expect(res.body.length).toBeGreaterThan(0);
+        const body = res.body as ProductDto[];
+        expect(Array.isArray(body)).toBe(true);
+        expect(body).toBeGreaterThan(0);
       });
   });
 
@@ -65,8 +68,9 @@ describe('Products Controller (e2e)', () => {
       .get(`/products/${createdProductId}`)
       .expect(200)
       .expect((res) => {
-        expect(res.body).toHaveProperty('id', createdProductId);
-        expect(res.body.name).toBe(testProduct.name);
+        const body = res.body as ProductDto;
+        expect(body).toHaveProperty('id', createdProductId);
+        expect(body).toBe(testProduct.name);
       });
   });
 
@@ -76,10 +80,11 @@ describe('Products Controller (e2e)', () => {
       .send({ ...updatedProduct, id: createdProductId })
       .expect(200)
       .expect((res) => {
-        expect(res.body).toHaveProperty('id', createdProductId);
-        expect(res.body.name).toBe(updatedProduct.name);
-        expect(res.body.description).toBe(updatedProduct.description);
-        expect(res.body.price).toBe(updatedProduct.price);
+        const body = res.body as ProductDto;
+        expect(body).toHaveProperty('id', createdProductId);
+        expect(body.name).toBe(updatedProduct.name);
+        expect(body.description).toBe(updatedProduct.description);
+        expect(body.price).toBe(updatedProduct.price);
       });
   });
 
