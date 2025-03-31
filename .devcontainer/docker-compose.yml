@@ -12,7 +12,7 @@ services:
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
 
-    # Connect to all services network instead of just the db
+    # Connect to the service network to access all services
     network_mode: service:db
 
     # Use "forwardPorts" in **devcontainer.json** to forward an app port locally. 
