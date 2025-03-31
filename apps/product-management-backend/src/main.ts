@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { ProductManagementBackendModule } from './product-management-backend.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(ProductManagementBackendModule);
@@ -15,6 +16,7 @@ async function bootstrap() {
   SwaggerModule.setup('swagger', app, documentFactory, {
     jsonDocumentUrl: 'swagger/json',
   });
+  app.useGlobalPipes(new ValidationPipe());
   await app.listen(process.env.port ?? 3000);
   console.log(`Application is running on: ${await app.getUrl()}`);
 }

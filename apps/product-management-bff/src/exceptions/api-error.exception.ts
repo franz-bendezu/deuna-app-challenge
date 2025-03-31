@@ -7,46 +7,20 @@ export class ApiError extends HttpException {
     fallbackMessage: string,
     fallbackStatus: HttpStatus,
   ) {
-    if (isAxiosError(error)) {
-      const status = error.response?.status || fallbackStatus;
-      let message = fallbackMessage;
-      if (
-        error.response?.data &&
-        typeof error.response.data === 'object' &&
-        'message' in error.response.data &&
-        typeof error.response.data.message === 'string'
-      ) {
-        message = error.response.data.message;
-      } else {
-        message = fallbackMessage;
-      }
-      super(message, status);
+    if (
+      isAxiosError<{
+        message: string;
+      }>(error)
+    ) {
+      const { response } = error;
+
+      const message = response?.data?.message || fallbackMessage;
+      const statusCode = response?.status || fallbackStatus;
+      super({ message, statusCode }, statusCode);
     } else if (error instanceof Error) {
-      super(error.message || fallbackMessage, fallbackStatus);
+      super({ message: error.message || fallbackMessage }, fallbackStatus);
     } else {
-      super(fallbackMessage, fallbackStatus);
+      super({ message: fallbackMessage }, fallbackStatus);
     }
-  }
-
-  static notFound(error: unknown, resource: string = 'Resource'): ApiError {
-    return new ApiError(error, `${resource} not found`, HttpStatus.NOT_FOUND);
-  }
-
-  static badRequest(
-    error: unknown,
-    action: string = 'process request',
-  ): ApiError {
-    return new ApiError(error, `Failed to ${action}`, HttpStatus.BAD_REQUEST);
-  }
-
-  static internal(
-    error: unknown,
-    action: string = 'process request',
-  ): ApiError {
-    return new ApiError(
-      error,
-      `Failed to ${action}`,
-      HttpStatus.INTERNAL_SERVER_ERROR,
-    );
   }
 }

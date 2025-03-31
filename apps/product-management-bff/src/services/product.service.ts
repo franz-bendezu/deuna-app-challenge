@@ -31,7 +31,7 @@ export class ProductService {
       );
       return data;
     } catch (error) {
-      throw ApiError.internal(error, 'fetch products');
+      throw new ApiError(error, 'Failed to fetch products', 500);
     }
   }
 
@@ -42,7 +42,7 @@ export class ProductService {
       );
       return data;
     } catch (error) {
-      throw ApiError.notFound(error, 'Product');
+      throw new ApiError(error, 'Product not found', 404);
     }
   }
 
@@ -53,7 +53,7 @@ export class ProductService {
       );
       return data;
     } catch (error) {
-      throw ApiError.badRequest(error, 'create product');
+      throw new ApiError(error, 'Failed to create product', 400);
     }
   }
 
@@ -70,7 +70,7 @@ export class ProductService {
       );
       return data;
     } catch (error) {
-      throw ApiError.badRequest(error, 'update product');
+      throw new ApiError(error, 'Failed to update product', 400);
     }
   }
 
@@ -79,7 +79,7 @@ export class ProductService {
       await firstValueFrom(this.httpService.delete(`${this.API_URL}/${id}`));
       return true;
     } catch (error) {
-      throw ApiError.badRequest(error, 'delete product');
+      throw new ApiError(error, 'Failed to delete product', 400);
     }
   }
 }
