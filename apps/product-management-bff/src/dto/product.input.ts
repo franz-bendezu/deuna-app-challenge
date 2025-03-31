@@ -1,7 +1,11 @@
 import { Field, InputType } from '@nestjs/graphql';
+import {
+  ICreateProductRequest,
+  IUpdateProductRequest,
+} from '../interfaces/product.interface';
 
 @InputType()
-export class CreateProductInput {
+export class CreateProductInput implements ICreateProductRequest {
   @Field()
   name: string;
 
@@ -16,7 +20,7 @@ export class CreateProductInput {
 }
 
 @InputType()
-export class UpdateProductInput {
+export class UpdateProductInput implements IUpdateProductRequest {
   @Field({ nullable: true })
   name?: string;
 

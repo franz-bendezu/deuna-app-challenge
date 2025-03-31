@@ -6,9 +6,9 @@ import { AxiosHeaders, AxiosResponse } from 'axios';
 import { ProductService } from './product.service';
 import { ApiError } from '../exceptions/api-error.exception';
 import {
-  ProductResponse,
-  CreateProductRequest,
-  UpdateProductRequest,
+  IProductResponse,
+  ICreateProductRequest,
+  IUpdateProductRequest,
 } from '../interfaces/product.interface';
 
 describe('ProductService', () => {
@@ -30,7 +30,7 @@ describe('ProductService', () => {
     }),
   };
 
-  const mockProduct: ProductResponse = {
+  const mockProduct: IProductResponse = {
     id: '1',
     name: 'Test Product',
     price: 100,
@@ -59,7 +59,7 @@ describe('ProductService', () => {
 
   describe('findAll', () => {
     it('should return an array of products', async () => {
-      const response: AxiosResponse<ProductResponse[]> = {
+      const response: AxiosResponse<IProductResponse[]> = {
         data: [mockProduct],
         status: 200,
         statusText: 'OK',
@@ -88,7 +88,7 @@ describe('ProductService', () => {
 
   describe('findOne', () => {
     it('should return a single product', async () => {
-      const response: AxiosResponse<ProductResponse> = {
+      const response: AxiosResponse<IProductResponse> = {
         data: mockProduct,
         status: 200,
         statusText: 'OK',
@@ -117,13 +117,13 @@ describe('ProductService', () => {
 
   describe('create', () => {
     it('should create a new product', async () => {
-      const createProductDto: CreateProductRequest = {
+      const createProductDto: ICreateProductRequest = {
         name: 'New Product',
         price: 200,
         description: 'New Description',
         stock: 0,
       };
-      const response: AxiosResponse<ProductResponse> = {
+      const response: AxiosResponse<IProductResponse> = {
         data: mockProduct,
         status: 201,
         statusText: 'Created',
@@ -168,12 +168,12 @@ describe('ProductService', () => {
 
   describe('update', () => {
     it('should update an existing product', async () => {
-      const updateProductDto: UpdateProductRequest = {
+      const updateProductDto: IUpdateProductRequest = {
         name: 'Updated Product',
         price: 300,
         description: 'Updated Description',
       };
-      const response: AxiosResponse<ProductResponse> = {
+      const response: AxiosResponse<IProductResponse> = {
         data: mockProduct,
         status: 200,
         statusText: 'OK',

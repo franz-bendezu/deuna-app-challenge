@@ -1,18 +1,18 @@
 import {
-  ProductResponse,
-  CreateProductRequest,
-  UpdateProductRequest,
+  IProductResponse,
+  ICreateProductRequest,
+  IUpdateProductRequest,
 } from '../interfaces/product.interface';
 
 export interface IProductService {
-  findAll(this: void): Promise<ProductResponse[]>;
+  findAll(this: void): Promise<IProductResponse[]>;
 
   /**
    * Find a product by its ID
    * @param id - The product ID
    * @returns Promise resolving to a single product
    */
-  findOne(this: void, id: string): Promise<ProductResponse>;
+  findOne(this: void, id: string): Promise<IProductResponse>;
 
   /**
    * Create a new product
@@ -21,8 +21,8 @@ export interface IProductService {
    */
   create(
     this: void,
-    createProductDto: CreateProductRequest,
-  ): Promise<ProductResponse>;
+    createProductDto: ICreateProductRequest,
+  ): Promise<IProductResponse>;
 
   /**
    * Update an existing product
@@ -33,8 +33,8 @@ export interface IProductService {
   update(
     this: void,
     id: string,
-    updateProductDto: UpdateProductRequest,
-  ): Promise<ProductResponse>;
+    updateProductDto: IUpdateProductRequest,
+  ): Promise<IProductResponse>;
 
   /**
    * Remove a product

@@ -1,8 +1,8 @@
 import { IBaseSharedProduct, ISharedProduct } from '@app/shared';
 
-export interface ProductResponse extends ISharedProduct {
+export interface IProductResponse extends ISharedProduct {
   createdAt: string;
   updatedAt: string;
 }
-export type CreateProductRequest = IBaseSharedProduct;
-export type UpdateProductRequest = Partial<IBaseSharedProduct>;
+export type ICreateProductRequest = IBaseSharedProduct;
+export type IUpdateProductRequest = Partial<IBaseSharedProduct>;

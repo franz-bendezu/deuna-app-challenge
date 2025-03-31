@@ -4,9 +4,9 @@ import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
 import { ApiError } from '../exceptions/api-error.exception';
 import {
-  ProductResponse,
-  CreateProductRequest,
-  UpdateProductRequest,
+  IProductResponse,
+  ICreateProductRequest,
+  IUpdateProductRequest,
 } from '../interfaces/product.interface';
 import { IProductService } from './product.service.interface';
 
@@ -25,10 +25,10 @@ export class ProductService implements IProductService {
     this.API_URL = `${backendUrl}${productsEndpoint}`;
   }
 
-  async findAll(): Promise<ProductResponse[]> {
+  async findAll(): Promise<IProductResponse[]> {
     try {
       const { data } = await firstValueFrom(
-        this.httpService.get<ProductResponse[]>(this.API_URL),
+        this.httpService.get<IProductResponse[]>(this.API_URL),
       );
       return data;
     } catch (error) {
@@ -36,10 +36,10 @@ export class ProductService implements IProductService {
     }
   }
 
-  async findOne(id: string): Promise<ProductResponse> {
+  async findOne(id: string): Promise<IProductResponse> {
     try {
       const { data } = await firstValueFrom(
-        this.httpService.get<ProductResponse>(`${this.API_URL}/${id}`),
+        this.httpService.get<IProductResponse>(`${this.API_URL}/${id}`),
       );
       return data;
     } catch (error) {
@@ -48,11 +48,11 @@ export class ProductService implements IProductService {
   }
 
   async create(
-    createProductDto: CreateProductRequest,
-  ): Promise<ProductResponse> {
+    createProductDto: ICreateProductRequest,
+  ): Promise<IProductResponse> {
     try {
       const { data } = await firstValueFrom(
-        this.httpService.post<ProductResponse>(this.API_URL, createProductDto),
+        this.httpService.post<IProductResponse>(this.API_URL, createProductDto),
       );
       return data;
     } catch (error) {
@@ -62,11 +62,11 @@ export class ProductService implements IProductService {
 
   async update(
     id: string,
-    updateProductDto: UpdateProductRequest,
-  ): Promise<ProductResponse> {
+    updateProductDto: IUpdateProductRequest,
+  ): Promise<IProductResponse> {
     try {
       const { data } = await firstValueFrom(
-        this.httpService.put<ProductResponse>(
+        this.httpService.put<IProductResponse>(
           `${this.API_URL}/${id}`,
           updateProductDto,
         ),

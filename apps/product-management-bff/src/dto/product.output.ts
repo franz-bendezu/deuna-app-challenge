@@ -1,7 +1,8 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { IProductResponse } from '../interfaces/product.interface';
 
 @ObjectType()
-export class ProductDTO {
+export class ProductDTO implements IProductResponse {
   @Field()
   id: string;
   @Field()
