@@ -279,30 +279,34 @@ Para ejecutar todas las pruebas:
 
 ## Ejemplos
 
-### Ejemplos de BBF
+### Ejemplos de BBF (GraphQL)
 
 #### Consultar todos los productos
 ```graphql
-query {
+{
   products {
     id
     name
-    price
     description
+    price
     stock
+    createdAt
+    updatedAt
   }
 }
 ```
 
 #### Obtener producto por ID
 ```graphql
-query {
+{
   product(id: "1") {
     id
     name
-    price
     description
+    price
     stock
+    createdAt
+    updatedAt
   }
 }
 ```
@@ -310,58 +314,116 @@ query {
 #### Crear nuevo producto
 ```graphql
 mutation {
-  createProduct(
-    data: {
-      name: "Nuevo Producto"
-      price: 99.99
-      description: "Descripción del producto"
-      stock: 1
-    }
-  ) {
+  createProduct(input: {
+    name: "Nuevo Producto",
+    description: "Descripción del nuevo producto",
+    price: 99.99,
+    stock: 50
+  }) {
     id
     name
+    description
     price
+    stock
+    createdAt
+    updatedAt
   }
 }
 ```
 
-### Ejemplos de Backend
+#### Actualizar producto
+```graphql
+mutation {
+  updateProduct(
+    id: "1", 
+    input: {
+      name: "Producto Actualizado",
+      price: 129.99
+    }
+  ) {
+    id
+    name
+    description
+    price
+    stock
+    createdAt
+    updatedAt
+  }
+}
+```
+
+#### Eliminar producto
+```graphql
+mutation {
+  deleteProduct(id: "1")
+}
+```
+
+### Ejemplos de Backend (REST API)
 
 #### Obtener todos los productos
 ```bash
-curl -X GET http://localhost:3000/api/products
+curl -X GET http://localhost:3000/products
 ```
 
 #### Obtener producto por ID
 ```bash
-curl -X GET http://localhost:3000/api/products/1
+curl -X GET http://localhost:3000/products/1
 ```
 
 #### Crear nuevo producto
 ```bash
-curl -X POST http://localhost:3000/api/products \
+curl -X POST http://localhost:3000/products \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "Nuevo Producto",
-    "price": 99.99,
-    "description": "Descripción del producto",
-    "stock": 12
+    "nombre": "Nuevo Producto",
+    "descripcion": "Descripción detallada del producto",
+    "precio": 99.99,
+    "stock": 100
   }'
 ```
 
 #### Actualizar producto
 ```bash
-curl -X PUT http://localhost:3000/api/products/1 \
+curl -X PUT http://localhost:3000/products/1 \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "Actualiado Producto",
-    "price": 99.99,
-    "description": "Descripción del producto",
-    "stock": 12
+    "nombre": "Producto Actualizado",
+    "descripcion": "Descripción actualizada",
+    "precio": 149.99,
+    "stock": 75
   }'
 ```
 
 #### Eliminar producto
 ```bash
-curl -X DELETE http://localhost:3000/api/products/1
+curl -X DELETE http://localhost:3000/products/1
+```
+
+## Formatos de datos
+
+### Backend REST API (Product DTO)
+```json
+{
+  "id": "1",
+  "nombre": "Producto de ejemplo",
+  "descripcion": "Descripción detallada del producto",
+  "precio": 99.99,
+  "stock": 100,
+  "fechaCreacion": "2023-06-15T10:30:00Z",
+  "fechaActualizacion": "2023-06-15T10:30:00Z"
+}
+```
+
+### BFF GraphQL API (Product DTO)
+```json
+{
+  "id": "1",
+  "name": "Producto de ejemplo",
+  "description": "Descripción detallada del producto",
+  "price": 99.99,
+  "stock": 100,
+  "createdAt": "2023-06-15T10:30:00Z",
+  "updatedAt": "2023-06-15T10:30:00Z"
+}
 ```
