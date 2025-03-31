@@ -1,5 +1,12 @@
 import { ApiProperty, ApiSchema } from '@nestjs/swagger';
-import { IsDecimal, IsInt, IsNotEmpty, IsString, Min } from 'class-validator';
+import {
+  IsDecimal,
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  Min,
+} from 'class-validator';
 
 @ApiSchema({
   description: 'Base product data transfer object',
@@ -21,7 +28,7 @@ export class BaseProductDto {
   })
   description: string;
 
-  @IsNotEmpty()
+  @IsNumber({ maxDecimalPlaces: 2 })
   @IsDecimal()
   @ApiProperty({
     description: 'The price of the product',
