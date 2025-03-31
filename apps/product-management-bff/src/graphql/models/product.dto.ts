@@ -1,5 +1,4 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsDecimal, IsInt } from 'class-validator';
 
 @InputType()
 export class CreateProductInput {
@@ -10,27 +9,23 @@ export class CreateProductInput {
   description: string;
 
   @Field()
-  @IsDecimal()
   price: number;
 
   @Field()
-  @IsInt()
   stock: number;
 }
 
 @InputType()
 export class UpdateProductInput {
-  @Field()
-  name: string;
+  @Field({ nullable: true })
+  name?: string;
 
-  @Field()
-  description: string;
+  @Field({ nullable: true })
+  description?: string;
 
-  @Field()
-  @IsDecimal()
-  price: number;
+  @Field({ nullable: true })
+  price?: number;
 
-  @Field()
-  @IsInt()
-  stock: number;
+  @Field({ nullable: true })
+  stock?: number;
 }

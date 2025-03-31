@@ -21,6 +21,13 @@ import { join } from 'path';
     }),
     HttpModule,
   ],
-  providers: [ProductService, ProductResolver],
+  providers: [
+    // Service Layer
+    ProductService,
+    // Data Access Layer
+    ProductService,
+    // Resolver Layer (GraphQL)
+    ProductResolver,
+  ],
 })
 export class ProductManagementBffModule {}
