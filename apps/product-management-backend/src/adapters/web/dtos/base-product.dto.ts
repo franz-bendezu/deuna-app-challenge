@@ -29,7 +29,6 @@ export class BaseProductDto {
   description: string;
 
   @IsNumber({ maxDecimalPlaces: 2 })
-  @IsDecimal()
   @ApiProperty({
     description: 'The price of the product',
     example: 99.99,

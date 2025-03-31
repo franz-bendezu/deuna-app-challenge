@@ -1,3 +1,3 @@
-import { Prisma } from '@prisma/client';
+import { Product } from '@prisma/client';
 
-export type IProductRow = Prisma.$ProductPayload['scalars'];
+export type IProductRow = Product;
