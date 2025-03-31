@@ -14,6 +14,7 @@ import { ICreateProductUseCase } from 'apps/product-management-backend/src/domai
 import { IFindProductByIdUseCase } from 'apps/product-management-backend/src/domain/usecases/find-product-by-id-usecase.interface';
 import { IUpdateProductUseCase } from 'apps/product-management-backend/src/domain/usecases/update-product-usecase.interface';
 import { IDeleteProductUseCase } from 'apps/product-management-backend/src/domain/usecases/delete-product-usecase.interface';
+import { ProductDTO } from '../dtos/product.dto';
 
 describe('ProductsController', () => {
   let controller: ProductsController;
@@ -148,12 +149,14 @@ describe('ProductsController', () => {
     describe('update', () => {
       it('should update a product and return ProductDto', async () => {
         const productId = '1';
-        const updateProductDto = {
+        const updateProductDto: ProductDTO = {
           id: '1',
           name: 'Updated Product',
           price: 120,
           description: 'Updated description',
           stock: 15,
+          createdAt: new Date(),
+          updatedAt: new Date(),
         };
         const updatedProduct = {
           ...updateProductDto,

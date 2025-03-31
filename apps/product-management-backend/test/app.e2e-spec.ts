@@ -4,7 +4,7 @@ import { ProductManagementBackendModule } from './../src/product-management-back
 import { INestApplication } from '@nestjs/common';
 import { Server } from 'net';
 import { BaseProductDto } from '../src/adapters/web/dtos/base-product.dto';
-import { ProductDto } from '../src/adapters/web/dtos/product.dto';
+import { ProductDTO } from '../src/adapters/web/dtos/product.dto';
 
 describe('Products Controller (e2e)', () => {
   let app: INestApplication<Server>;
@@ -43,7 +43,7 @@ describe('Products Controller (e2e)', () => {
       .send(testProduct)
       .expect(201)
       .expect((res: request.Response) => {
-        const body = res.body as ProductDto;
+        const body = res.body as ProductDTO;
         expect(body).toHaveProperty('id');
         expect(body.name).toBe(testProduct.name);
         expect(body.description).toBe(testProduct.description);
@@ -57,7 +57,7 @@ describe('Products Controller (e2e)', () => {
       .get('/products')
       .expect(200)
       .expect((res) => {
-        const body = res.body as ProductDto[];
+        const body = res.body as ProductDTO[];
         expect(Array.isArray(body)).toBe(true);
         expect(body).toBeGreaterThan(0);
       });
@@ -68,7 +68,7 @@ describe('Products Controller (e2e)', () => {
       .get(`/products/${createdProductId}`)
       .expect(200)
       .expect((res) => {
-        const body = res.body as ProductDto;
+        const body = res.body as ProductDTO;
         expect(body).toHaveProperty('id', createdProductId);
         expect(body).toBe(testProduct.name);
       });
@@ -80,7 +80,7 @@ describe('Products Controller (e2e)', () => {
       .send({ ...updatedProduct, id: createdProductId })
       .expect(200)
       .expect((res) => {
-        const body = res.body as ProductDto;
+        const body = res.body as ProductDTO;
         expect(body).toHaveProperty('id', createdProductId);
         expect(body.name).toBe(updatedProduct.name);
         expect(body.description).toBe(updatedProduct.description);

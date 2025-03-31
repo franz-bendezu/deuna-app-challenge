@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
 import { ApiError } from '../exceptions/api-error.exception';
 import {
-  IProductResponse,
+  ProductResponse,
   CreateProductRequest,
   UpdateProductRequest,
 } from '../interfaces/product.interface';
@@ -25,10 +25,10 @@ export class ProductService implements IProductService {
     this.API_URL = `${backendUrl}${productsEndpoint}`;
   }
 
-  async findAll(): Promise<IProductResponse[]> {
+  async findAll(): Promise<ProductResponse[]> {
     try {
       const { data } = await firstValueFrom(
-        this.httpService.get<IProductResponse[]>(this.API_URL),
+        this.httpService.get<ProductResponse[]>(this.API_URL),
       );
       return data;
     } catch (error) {
@@ -36,10 +36,10 @@ export class ProductService implements IProductService {
     }
   }
 
-  async findOne(id: string): Promise<IProductResponse> {
+  async findOne(id: string): Promise<ProductResponse> {
     try {
       const { data } = await firstValueFrom(
-        this.httpService.get<IProductResponse>(`${this.API_URL}/${id}`),
+        this.httpService.get<ProductResponse>(`${this.API_URL}/${id}`),
       );
       return data;
     } catch (error) {
@@ -49,10 +49,10 @@ export class ProductService implements IProductService {
 
   async create(
     createProductDto: CreateProductRequest,
-  ): Promise<IProductResponse> {
+  ): Promise<ProductResponse> {
     try {
       const { data } = await firstValueFrom(
-        this.httpService.post<IProductResponse>(this.API_URL, createProductDto),
+        this.httpService.post<ProductResponse>(this.API_URL, createProductDto),
       );
       return data;
     } catch (error) {
@@ -63,10 +63,10 @@ export class ProductService implements IProductService {
   async update(
     id: string,
     updateProductDto: UpdateProductRequest,
-  ): Promise<IProductResponse> {
+  ): Promise<ProductResponse> {
     try {
       const { data } = await firstValueFrom(
-        this.httpService.put<IProductResponse>(
+        this.httpService.put<ProductResponse>(
           `${this.API_URL}/${id}`,
           updateProductDto,
         ),

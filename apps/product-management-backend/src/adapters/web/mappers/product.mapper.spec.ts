@@ -1,6 +1,6 @@
 import { ProductMapper } from './product.mapper';
 import { Product } from '../../../domain/models/product.model';
-import { ProductDto } from '../dtos/product.dto';
+import { ProductDTO } from '../dtos/product.dto';
 import { BaseProductDto } from '../dtos/base-product.dto';
 import { BaseProduct } from '../../../domain/models/base-product.model';
 
@@ -17,12 +17,14 @@ describe('ProductMapper', () => {
         updatedAt: new Date(),
       };
 
-      const expectedDto: ProductDto = new ProductDto(
+      const expectedDto: ProductDTO = new ProductDTO(
         '123',
         'Test Product',
         'This is a test product',
         100,
         50,
+        product.createdAt,
+        product.updatedAt,
       );
 
       const result = ProductMapper.mapToDto(product);
@@ -54,12 +56,14 @@ describe('ProductMapper', () => {
 
   describe('mapDtoToUpdateParams', () => {
     it('should map a ProductDto to a BaseProduct correctly', () => {
-      const dto: ProductDto = new ProductDto(
+      const dto: ProductDTO = new ProductDTO(
         '123',
         'Updated Product',
         'This is an updated product',
         150,
         30,
+        new Date(),
+        new Date(),
       );
 
       const expectedProduct: BaseProduct = new BaseProduct(

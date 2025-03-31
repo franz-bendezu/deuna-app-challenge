@@ -11,7 +11,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { BaseProductDto } from '../dtos/base-product.dto';
-import { ProductDto } from '../dtos/product.dto';
+import { ProductDTO } from '../dtos/product.dto';
 import { ProductMapper } from '../mappers/product.mapper';
 import { ICreateProductUseCase } from '../../../domain/usecases/create-product-usecase.interface';
 import { IDeleteProductUseCase } from '../../../domain/usecases/delete-product-usecase.interface';
@@ -61,9 +61,9 @@ export class ProductsController {
   })
   @ApiCreatedResponse({
     description: 'The created product',
-    type: ProductDto,
+    type: ProductDTO,
   })
-  async create(@Body() createProductDto: BaseProductDto): Promise<ProductDto> {
+  async create(@Body() createProductDto: BaseProductDto): Promise<ProductDTO> {
     const productParams = ProductMapper.mapDtoToProduct(createProductDto);
     const createdProduct =
       await this.createProductUseCase.execute(productParams);
@@ -78,10 +78,10 @@ export class ProductsController {
   })
   @ApiOkResponse({
     description: 'List of products',
-    type: ProductDto,
+    type: ProductDTO,
     isArray: true,
   })
-  async findAll(): Promise<ProductDto[]> {
+  async findAll(): Promise<ProductDTO[]> {
     const products = await this.findAllProductsUseCase.execute();
     return products.map((product) => ProductMapper.mapToDto(product));
   }
@@ -94,14 +94,14 @@ export class ProductsController {
   })
   @ApiOkResponse({
     description: 'The product with the specified ID',
-    type: ProductDto,
+    type: ProductDTO,
   })
   @ApiNotFoundResponse({
     description: 'Product not found',
   })
   async findOne(
     @Param(ProductsController.PATH_ID_PARAM) id: string,
-  ): Promise<ProductDto> {
+  ): Promise<ProductDTO> {
     const product = await this.findProductByIdUseCase.execute(id);
     return ProductMapper.mapToDto(product);
   }
@@ -114,14 +114,14 @@ export class ProductsController {
   })
   @ApiOkResponse({
     description: 'The updated product',
-    type: ProductDto,
+    type: ProductDTO,
   })
   @ApiNotFoundResponse({
     description: 'Product not found',
   })
   async update(
     @Param(ProductsController.PATH_ID_PARAM) id: string,
-    @Body() updateProductDto: ProductDto,
+    @Body() updateProductDto: ProductDTO,
   ) {
     const params = ProductMapper.mapDtoToUpdateParams(updateProductDto);
     const updatedProduct = await this.updateProductUseCase.execute(id, params);

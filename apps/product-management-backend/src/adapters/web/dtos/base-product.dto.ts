@@ -1,17 +1,11 @@
+import { IBaseSharedProduct } from '@app/shared';
 import { ApiProperty, ApiSchema } from '@nestjs/swagger';
-import {
-  IsDecimal,
-  IsInt,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-  Min,
-} from 'class-validator';
+import { IsInt, IsNotEmpty, IsNumber, IsString, Min } from 'class-validator';
 
 @ApiSchema({
   description: 'Base product data transfer object',
 })
-export class BaseProductDto {
+export class BaseProductDto implements IBaseSharedProduct {
   @IsNotEmpty()
   @IsString()
   @ApiProperty({

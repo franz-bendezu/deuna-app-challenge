@@ -1,15 +1,5 @@
-export interface IBaseProduct {
-  name: string;
-  description: string;
-  price: number;
-  stock: number;
-}
+import { IBaseSharedProduct, ISharedProduct } from '@app/shared';
 
-export interface IProductResponse extends IBaseProduct {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export type CreateProductRequest = IBaseProduct;
-export type UpdateProductRequest = Partial<IBaseProduct>;
+export type ProductResponse = ISharedProduct;
+export type CreateProductRequest = IBaseSharedProduct;
+export type UpdateProductRequest = Partial<IBaseSharedProduct>;

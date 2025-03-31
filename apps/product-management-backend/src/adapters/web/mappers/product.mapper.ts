@@ -1,16 +1,18 @@
 import { BaseProduct } from '../../../domain/models/base-product.model';
 import { Product } from '../../../domain/models/product.model';
 import { BaseProductDto } from '../dtos/base-product.dto';
-import { ProductDto } from '../dtos/product.dto';
+import { ProductDTO } from '../dtos/product.dto';
 
 export class ProductMapper {
-  static mapToDto(createdProduct: Product): ProductDto {
-    return new ProductDto(
+  static mapToDto(createdProduct: Product): ProductDTO {
+    return new ProductDTO(
       createdProduct.id,
       createdProduct.name,
       createdProduct.description,
       createdProduct.price,
       createdProduct.stock,
+      createdProduct.createdAt,
+      createdProduct.updatedAt,
     );
   }
 
@@ -18,7 +20,7 @@ export class ProductMapper {
     return new BaseProduct(dto.name, dto.description, dto.price, dto.stock);
   }
 
-  static mapDtoToUpdateParams(dto: ProductDto): BaseProduct {
+  static mapDtoToUpdateParams(dto: ProductDTO): BaseProduct {
     return new BaseProduct(dto.name, dto.description, dto.price, dto.stock);
   }
 }
