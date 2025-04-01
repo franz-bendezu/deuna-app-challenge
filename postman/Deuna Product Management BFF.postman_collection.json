@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "8fa7bd80-debd-4f1e-a2df-89734e569933",
+		"_postman_id": "e4953aa4-175a-43a0-9fc5-7bc62c293337",
 		"name": "Deuna Product Management BFF",
 		"description": "Colección para probar la API GraphQL del BFF de Gestión de Productos",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -104,6 +104,31 @@
 					]
 				},
 				"description": "Actualiza la información de un producto existente"
+			},
+			"response": []
+		},
+		{
+			"name": "Actualizar producto parcialmente",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation($id: String!, $input: UpdateProductInput!) {\n  updateProduct(id: $id, input: $input) {\n    id\n    nombre\n    descripcion\n    precio\n    stock\n    fechaCreacion\n    fechaActualizacion\n  }\n}",
+						"variables": "{\n  \"id\": \"1\",\n  \"input\": {\n    \"precio\": 139.99,\n    \"stock\": 45\n  }\n}"
+					}
+				},
+				"url": {
+					"raw": "{{bff_url}}/graphql",
+					"host": [
+						"{{bff_url}}"
+					],
+					"path": [
+						"graphql"
+					]
+				},
+				"description": "Actualiza parcialmente la información de un producto existente (solo los campos proporcionados)"
 			},
 			"response": []
 		},

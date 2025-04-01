@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "3236233f-0a4a-42f7-befd-fd0223c25f2d",
+		"_postman_id": "a32f797c-5fc5-4525-a6e9-6fbfd1f3e0d9",
 		"name": "DeUna Integration Tests",
 		"description": "Pruebas de integración para validar el flujo completo entre BFF y Backend",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -107,7 +107,53 @@
 					"response": []
 				},
 				{
-					"name": "3. Actualizar Producto (BFF)",
+					"name": "3. Actualizar Producto Parcialmente (BFF)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"// Validar respuesta",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Producto actualizado parcialmente desde BFF\", function () {",
+									"    pm.expect(jsonData.data.updateProduct.precio).to.eql(129.99);",
+									"    pm.expect(jsonData.data.updateProduct.nombre).to.eql(\"Producto de Prueba\");  // no debe cambiar",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation($id: String!, $input: UpdateProductInput!) {\n  updateProduct(id: $id, input: $input) {\n    id\n    nombre\n    descripcion\n    precio\n    stock\n    fechaCreacion\n    fechaActualizacion\n  }\n}",
+								"variables": "{\n  \"id\": \"{{test_product_id}}\",\n  \"input\": {\n    \"precio\": 129.99\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{bff_url}}/graphql",
+							"host": [
+								"{{bff_url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						},
+						"description": "Actualiza parcialmente el producto utilizando la API GraphQL del BFF"
+					},
+					"response": []
+				},
+				{
+					"name": "4. Actualizar Producto Completo (BFF)",
 					"event": [
 						{
 							"listen": "test",
@@ -153,7 +199,7 @@
 					"response": []
 				},
 				{
-					"name": "4. Verificar Actualización (Backend)",
+					"name": "5. Verificar Actualización (Backend)",
 					"event": [
 						{
 							"listen": "test",
@@ -194,7 +240,56 @@
 					"response": []
 				},
 				{
-					"name": "5. Eliminar Producto (Backend)",
+					"name": "6. Actualizar Parcialmente (Backend)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"// Validar respuesta",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"El producto se actualizó parcialmente\", function () {",
+									"    pm.expect(jsonData.nombre).to.eql(\"Producto Actualizado\"); // No se modificó",
+									"    pm.expect(jsonData.stock).to.eql(25); // Se modificó",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"stock\": 25\n}"
+						},
+						"url": {
+							"raw": "{{backend_url}}/products/{{test_product_id}}",
+							"host": [
+								"{{backend_url}}"
+							],
+							"path": [
+								"products",
+								"{{test_product_id}}"
+							]
+						},
+						"description": "Actualiza parcialmente el producto directamente desde el backend"
+					},
+					"response": []
+				},
+				{
+					"name": "7. Eliminar Producto (Backend)",
 					"event": [
 						{
 							"listen": "test",
@@ -227,7 +322,7 @@
 					"response": []
 				},
 				{
-					"name": "6. Verificar Eliminación (BFF)",
+					"name": "8. Verificar Eliminación (BFF)",
 					"event": [
 						{
 							"listen": "test",
