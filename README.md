@@ -157,7 +157,7 @@ Las variables de entorno son esenciales para la configuración del sistema. El p
 
 2. **Configuración por entorno**: Ajusta los valores según el método de configuración elegido:
 
-   | Variable | Producción (Docker) | Desarrollo Local (Docker) |
+   | Variable | Producción (Docker with environment) | Desarrollo Local (Docker) - .env |
    |----------|---------------------|---------------------------|
    | `DB_HOST` | db | localhost |
    | `DATABASE_URL` | postgresql://postgres:postgres@db:5432/products_db | postgresql://postgres:postgres@localhost:5432/products_db |
