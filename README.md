@@ -123,13 +123,15 @@ npx prisma migrate dev
 npx prisma db seed
 
 # Iniciar servicios en terminales separadas
-pnpm start:dev:backend  # Terminal 1
-pnpm start:dev:bff      # Terminal 2
+pnpm start:dev:backend  # Terminal 1 (Puerto 3000)
+pnpm start:dev:bff      # Terminal 2 (Puerto 3001)
 ```
 
 Con esta configuración:
 - Solo PostgreSQL, Redis y Kafka se ejecutan en Docker
 - Los servicios de aplicación se ejecutan localmente con hot-reload
+  - Backend en puerto 3000
+  - BFF en puerto 3001
 - Facilita el desarrollo y la depuración
 
 ## Configuración de Variables de Entorno
@@ -282,7 +284,6 @@ La colección utiliza variables de entorno para facilitar las pruebas en diferen
 
 - `backend_url`: URL base para el servicio Backend (predeterminado: http://localhost:3000)
 - `bff_url`: URL base para el servicio BFF (predeterminado: http://localhost:3001)
-
 
 ### Guía de uso
 
