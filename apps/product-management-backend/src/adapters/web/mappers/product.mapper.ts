@@ -1,5 +1,5 @@
 import { BaseProduct } from '../../../domain/models/base-product.model';
-import { CreateProduct } from 'apps/product-management-backend/src/domain/models/create-product.model';
+import { CreateProduct } from '../../../domain/models/create-product.model';
 import { Product } from '../../../domain/models/product.model';
 import { BaseProductDto } from '../dtos/base-product.dto';
 import { CreateProductDto } from '../dtos/create-product.dto';

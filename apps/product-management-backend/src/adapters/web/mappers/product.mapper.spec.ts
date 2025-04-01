@@ -2,7 +2,7 @@ import { ProductMapper } from './product.mapper';
 import { Product } from '../../../domain/models/product.model';
 import { ProductDTO } from '../dtos/product.dto';
 import { CreateProductDto } from '../dtos/create-product.dto';
-import { CreateProduct } from 'apps/product-management-backend/src/domain/models/create-product.model';
+import { CreateProduct } from '../../../domain/models/create-product.model';
 
 describe('ProductMapper', () => {
   describe('mapToDto', () => {
