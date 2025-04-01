@@ -19,6 +19,8 @@ export const FIND_PRODUCT_BY_ID_USECASE: InjectionToken<IFindProductByIdUseCase>
   'FIND_PRODUCT_BY_ID_USECASE';
 export const UPDATE_PRODUCT_USECASE: InjectionToken<IUpdateProductUseCase> =
   'UPDATE_PRODUCT_USECASE';
+export const UPDATE__PARTIAL_PRODUCT_USECASE: InjectionToken<IUpdateProductUseCase> =
+  'UPDATE_PARTIAL_PRODUCT_USECASE';
 export const DELETE_PRODUCT_USECASE: InjectionToken<IDeleteProductUseCase> =
   'DELETE_PRODUCT_USECASE';
 

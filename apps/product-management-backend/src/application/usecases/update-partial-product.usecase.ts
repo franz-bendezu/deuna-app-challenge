@@ -12,7 +12,7 @@ import { IProductPublisher } from '../../domain/interfaces/event-publisher.inter
 import { ProductEvents } from '../../domain/constants/events';
 
 @Injectable()
-export class UpdateProductUseCase implements IUpdateProductUseCase {
+export class UpdatePartialProductUseCase implements IUpdateProductUseCase {
   constructor(
     @Inject(PRODUCT_REPOSITORY)
     private readonly productRepository: IProductRepository,

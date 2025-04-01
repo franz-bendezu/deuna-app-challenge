@@ -3,21 +3,21 @@ import * as request from 'supertest';
 import { ProductManagementBackendModule } from './../src/product-management-backend.module';
 import { INestApplication } from '@nestjs/common';
 import { Server } from 'net';
-import { BaseProductDto } from '../src/adapters/web/dtos/base-product.dto';
+import { CreateProductDto } from '../src/adapters/web/dtos/create-product.dto';
 import { ProductDTO } from '../src/adapters/web/dtos/product.dto';
 
 describe('Products Controller (e2e)', () => {
   let app: INestApplication<Server>;
   let createdProductId: string;
 
-  const testProduct: BaseProductDto = {
+  const testProduct: CreateProductDto = {
     nombre: 'Test Product',
     descripcion: 'A product for e2e testing',
     precio: 99.99,
     stock: 100,
   };
 
-  const updatedProduct: BaseProductDto = {
+  const updatedProduct: CreateProductDto = {
     nombre: 'Updated Test Product',
     descripcion: 'Updated description for testing',
     precio: 199.99,

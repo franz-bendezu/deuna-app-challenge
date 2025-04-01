@@ -66,7 +66,7 @@ export class ProductService implements IProductService {
   ): Promise<IProductResponse> {
     try {
       const { data } = await firstValueFrom(
-        this.httpService.put<IProductResponse>(
+        this.httpService.patch<IProductResponse>(
           `${this.API_URL}/${id}`,
           updateProductDto,
         ),

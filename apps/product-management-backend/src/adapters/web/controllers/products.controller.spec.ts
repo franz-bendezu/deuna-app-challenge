@@ -6,6 +6,7 @@ import {
   DELETE_PRODUCT_USECASE,
   FIND_ALL_PRODUCTS_USECASE,
   FIND_PRODUCT_BY_ID_USECASE,
+  UPDATE__PARTIAL_PRODUCT_USECASE,
   UPDATE_PRODUCT_USECASE,
 } from '../../../domain/constants/injection-tokens';
 import { ProductMapper } from '../mappers/product.mapper';
@@ -15,7 +16,7 @@ import { IFindProductByIdUseCase } from '../../../domain/usecases/find-product-b
 import { IUpdateProductUseCase } from '../../../domain/usecases/update-product-usecase.interface';
 import { IDeleteProductUseCase } from '../../../domain/usecases/delete-product-usecase.interface';
 import { ProductDTO } from '../dtos/product.dto';
-import { BaseProductDto } from '../dtos/base-product.dto';
+import { CreateProductDto } from '../dtos/create-product.dto';
 
 describe('ProductsController', () => {
   let controller: ProductsController;
@@ -24,6 +25,7 @@ describe('ProductsController', () => {
   let deleteProductUseCase: jest.Mocked<IDeleteProductUseCase>;
   let findProductByIdUseCase: jest.Mocked<IFindProductByIdUseCase>;
   let updateProductUseCase: jest.Mocked<IUpdateProductUseCase>;
+  let updatePartialProductUseCase: jest.Mocked<IUpdateProductUseCase>;
 
   const mockProducts: Product[] = [
     {
@@ -62,6 +64,9 @@ describe('ProductsController', () => {
     updateProductUseCase = {
       execute: jest.fn(),
     };
+    updatePartialProductUseCase = {
+      execute: jest.fn(),
+    };
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ProductsController],
       providers: [
@@ -84,6 +89,10 @@ describe('ProductsController', () => {
         {
           provide: DELETE_PRODUCT_USECASE,
           useValue: deleteProductUseCase,
+        },
+        {
+          provide: UPDATE__PARTIAL_PRODUCT_USECASE,
+          useValue: updatePartialProductUseCase,
         },
       ],
     }).compile();
@@ -109,7 +118,7 @@ describe('ProductsController', () => {
 
     describe('create', () => {
       it('should create a product and return ProductDto', async () => {
-        const createProductDto: BaseProductDto = {
+        const createProductDto: CreateProductDto = {
           nombre: 'New Product',
           precio: 150,
           descripcion: 'A new product',
@@ -179,6 +188,43 @@ describe('ProductsController', () => {
         expect(updateProductUseCase.execute).toHaveBeenCalledWith(
           productId,
           ProductMapper.mapDtoToUpdateParams(updateProductDto),
+        );
+        expect(result).toEqual(ProductMapper.mapToDto(updatedProduct));
+      });
+    });
+
+    describe('partialUpdate', () => {
+      it('should partially update a product and return ProductDto', async () => {
+        const productId = '1';
+        const updateProductDto: ProductDTO = {
+          id: '1',
+          nombre: 'Partially Updated Product',
+          precio: 130,
+          descripcion: 'Partially updated description',
+          stock: 20,
+          fechaCreacion: new Date(),
+          fechaActualizacion: new Date(),
+        };
+        const updatedProduct = new Product(
+          '1',
+          'Partially Updated Product',
+          'Partially updated description',
+          130,
+          20,
+          new Date(),
+          new Date(),
+        );
+
+        updatePartialProductUseCase.execute.mockResolvedValue(updatedProduct);
+
+        const result = await controller.partialUpdate(
+          productId,
+          updateProductDto,
+        );
+
+        expect(updatePartialProductUseCase.execute).toHaveBeenCalledWith(
+          productId,
+          ProductMapper.mapDtoToPartialUpdateParams(updateProductDto),
         );
         expect(result).toEqual(ProductMapper.mapToDto(updatedProduct));
       });

@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Product } from '../../../domain/models/product.model';
 import { IProductRepository } from '../../../application/repositories/product.repository.interface';
-import { BaseProduct } from '../../../domain/models/base-product.model';
+import { CreateProduct } from 'apps/product-management-backend/src/domain/models/create-product.model';
 import {
   DB_CLIENT,
   DBClient,
@@ -15,7 +15,7 @@ export class ProductDatabaseRepository implements IProductRepository {
     private dbClient: DBClient,
   ) {}
 
-  async create(params: BaseProduct): Promise<Product> {
+  async create(params: CreateProduct): Promise<Product> {
     const result = await this.dbClient.product.create({
       data: {
         name: params.name,
@@ -40,7 +40,7 @@ export class ProductDatabaseRepository implements IProductRepository {
     return result ? ProductMapper.fromRowtoEntity(result) : null;
   }
 
-  async updateById(id: string, params: BaseProduct): Promise<Product | null> {
+  async updateById(id: string, params: CreateProduct): Promise<Product | null> {
     try {
       const result = await this.dbClient.product.update({
         where: { id },
@@ -52,6 +52,21 @@ export class ProductDatabaseRepository implements IProductRepository {
         },
       });
 
+      return ProductMapper.fromRowtoEntity(result);
+    } catch {
+      return null;
+    }
+  }
+
+  async updatePartialById(
+    id: string,
+    params: Partial<CreateProduct>,
+  ): Promise<Product | null> {
+    try {
+      const result = await this.dbClient.product.update({
+        where: { id },
+        data: params,
+      });
       return ProductMapper.fromRowtoEntity(result);
     } catch {
       return null;

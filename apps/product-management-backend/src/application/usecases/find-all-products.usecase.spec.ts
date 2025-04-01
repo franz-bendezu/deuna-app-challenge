@@ -15,6 +15,7 @@ describe('FindAllProductsUseCase', () => {
       findById: jest.fn(),
       updateById: jest.fn(),
       deleteById: jest.fn(),
+      updatePartialById: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({

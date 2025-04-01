@@ -10,6 +10,7 @@ import {
   FIND_PRODUCT_BY_ID_USECASE,
   UPDATE_PRODUCT_USECASE,
   DELETE_PRODUCT_USECASE,
+  UPDATE__PARTIAL_PRODUCT_USECASE,
 } from '../domain/constants/injection-tokens';
 import { AdaptersDataModule } from '../adapters/data/data.module';
 import { AdaptersMessagingModule } from '../adapters/messaging/messaging.module';
@@ -37,6 +38,10 @@ import { AdaptersMessagingModule } from '../adapters/messaging/messaging.module'
       provide: DELETE_PRODUCT_USECASE,
       useClass: DeleteProductUseCase,
     },
+    {
+      provide: UPDATE__PARTIAL_PRODUCT_USECASE,
+      useClass: UpdateProductUseCase,
+    },
   ],
   exports: [
     CREATE_PRODUCT_USECASE,
@@ -44,6 +49,7 @@ import { AdaptersMessagingModule } from '../adapters/messaging/messaging.module'
     FIND_PRODUCT_BY_ID_USECASE,
     UPDATE_PRODUCT_USECASE,
     DELETE_PRODUCT_USECASE,
+    UPDATE__PARTIAL_PRODUCT_USECASE,
   ],
 })
 export class ApplicationModule {}

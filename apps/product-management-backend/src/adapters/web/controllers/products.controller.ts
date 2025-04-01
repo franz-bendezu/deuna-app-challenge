@@ -10,7 +10,7 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { BaseProductDto } from '../dtos/base-product.dto';
+import { CreateProductDto } from '../dtos/create-product.dto';
 import { ProductDTO } from '../dtos/product.dto';
 import { ProductMapper } from '../mappers/product.mapper';
 import { ICreateProductUseCase } from '../../../domain/usecases/create-product-usecase.interface';
@@ -23,6 +23,7 @@ import {
   DELETE_PRODUCT_USECASE,
   FIND_ALL_PRODUCTS_USECASE,
   FIND_PRODUCT_BY_ID_USECASE,
+  UPDATE__PARTIAL_PRODUCT_USECASE,
   UPDATE_PRODUCT_USECASE,
 } from '../../../domain/constants/injection-tokens';
 import {
@@ -33,6 +34,8 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { BaseProductDto } from '../dtos/base-product.dto';
+import { IUpdatePartialProductUseCase } from 'apps/product-management-backend/src/domain/usecases/update-partial-product-usecase.interface';
 
 @ApiTags('productos')
 @Controller(ProductsController.PATH)
@@ -49,6 +52,8 @@ export class ProductsController {
     private readonly findProductByIdUseCase: IFindProductByIdUseCase,
     @Inject(UPDATE_PRODUCT_USECASE)
     private readonly updateProductUseCase: IUpdateProductUseCase,
+    @Inject(UPDATE__PARTIAL_PRODUCT_USECASE)
+    private readonly updatePartialProductUseCase: IUpdatePartialProductUseCase,
     @Inject(DELETE_PRODUCT_USECASE)
     private readonly deleteProductUseCase: IDeleteProductUseCase,
   ) {}
@@ -63,7 +68,9 @@ export class ProductsController {
     description: 'Producto creado exitosamente',
     type: ProductDTO,
   })
-  async create(@Body() createProductDto: BaseProductDto): Promise<ProductDTO> {
+  async create(
+    @Body() createProductDto: CreateProductDto,
+  ): Promise<ProductDTO> {
     const productParams = ProductMapper.mapDtoToProduct(createProductDto);
     const createdProduct =
       await this.createProductUseCase.execute(productParams);
@@ -127,6 +134,18 @@ export class ProductsController {
   ) {
     const params = ProductMapper.mapDtoToUpdateParams(updateProductDto);
     const updatedProduct = await this.updateProductUseCase.execute(id, params);
+    return ProductMapper.mapToDto(updatedProduct);
+  }
+
+  async partialUpdate(
+    @Param(ProductsController.PATH_ID_PARAM) id: string,
+    @Body() updateProductDto: BaseProductDto,
+  ) {
+    const params = ProductMapper.mapDtoToPartialUpdateParams(updateProductDto);
+    const updatedProduct = await this.updatePartialProductUseCase.execute(
+      id,
+      params,
+    );
     return ProductMapper.mapToDto(updatedProduct);
   }
 

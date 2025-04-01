@@ -1,8 +1,8 @@
 import { ProductMapper } from './product.mapper';
 import { Product } from '../../../domain/models/product.model';
 import { ProductDTO } from '../dtos/product.dto';
-import { BaseProductDto } from '../dtos/base-product.dto';
-import { BaseProduct } from '../../../domain/models/base-product.model';
+import { CreateProductDto } from '../dtos/create-product.dto';
+import { CreateProduct } from 'apps/product-management-backend/src/domain/models/create-product.model';
 
 describe('ProductMapper', () => {
   describe('mapToDto', () => {
@@ -35,14 +35,14 @@ describe('ProductMapper', () => {
 
   describe('mapDtoToProduct', () => {
     it('should map a BaseProductDto to a BaseProduct correctly', () => {
-      const dto: BaseProductDto = {
+      const dto: CreateProductDto = {
         nombre: 'Test Product',
         descripcion: 'This is a test product',
         precio: 100,
         stock: 50,
       };
 
-      const expectedProduct: BaseProduct = new BaseProduct(
+      const expectedProduct: CreateProduct = new CreateProduct(
         'Test Product',
         'This is a test product',
         100,
@@ -66,7 +66,7 @@ describe('ProductMapper', () => {
         new Date(),
       );
 
-      const expectedProduct: BaseProduct = new BaseProduct(
+      const expectedProduct: CreateProduct = new CreateProduct(
         'Updated Product',
         'This is an updated product',
         150,

@@ -20,6 +20,7 @@ describe('ProductService', () => {
     post: jest.fn(),
     put: jest.fn(),
     delete: jest.fn(),
+    patch: jest.fn(),
   };
 
   const mockConfigService = {
@@ -187,7 +188,7 @@ describe('ProductService', () => {
         },
       };
       const spyPut = jest
-        .spyOn(httpService, 'put')
+        .spyOn(httpService, 'patch')
         .mockReturnValue(of(response));
 
       const result = await service.update('1', updateProductDto);
@@ -200,7 +201,7 @@ describe('ProductService', () => {
 
     it('should throw an ApiError if update fails', async () => {
       jest
-        .spyOn(httpService, 'put')
+        .spyOn(httpService, 'patch')
         .mockReturnValue(throwError(() => new Error('Update failed')));
 
       await expect(

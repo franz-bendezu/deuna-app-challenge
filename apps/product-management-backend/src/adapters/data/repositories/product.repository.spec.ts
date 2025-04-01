@@ -1,6 +1,6 @@
 import { ProductRepository } from './product.repository';
 import { IProductRepository } from '../../../application/repositories/product.repository.interface';
-import { BaseProduct } from '../../../domain/models/base-product.model';
+import { CreateProduct } from 'apps/product-management-backend/src/domain/models/create-product.model';
 import { Product } from '../../../domain/models/product.model';
 import {
   PRODUCT_CACHE_REPOSITORY,
@@ -20,6 +20,7 @@ describe('ProductRepository', () => {
       findById: jest.fn(),
       updateById: jest.fn(),
       deleteById: jest.fn(),
+      updatePartialById: jest.fn(),
     };
 
     productCacheRepository = {
@@ -28,6 +29,7 @@ describe('ProductRepository', () => {
       findById: jest.fn(),
       updateById: jest.fn(),
       deleteById: jest.fn(),
+      updatePartialById: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -42,7 +44,7 @@ describe('ProductRepository', () => {
   });
 
   it('should create a product and cache it', async () => {
-    const baseProduct: BaseProduct = {
+    const baseProduct: CreateProduct = {
       name: 'Test Product',
       price: 100,
       description: '',
@@ -174,7 +176,7 @@ describe('ProductRepository', () => {
       description: '',
       stock: 0,
     };
-    const baseProduct: BaseProduct = {
+    const baseProduct: CreateProduct = {
       name: 'Updated Product',
       price: 150,
       description: '',
@@ -188,6 +190,40 @@ describe('ProductRepository', () => {
     expect(productDatabaseRepository.updateById).toHaveBeenCalledWith(
       '1',
       baseProduct,
+    );
+    expect(productCacheRepository.updateById).toHaveBeenCalledWith(
+      '1',
+      updatedProduct,
+    );
+    expect(result).toEqual(updatedProduct);
+  });
+
+  it('should update a product partially and cache the updated product', async () => {
+    const updatedProduct: Product = {
+      id: '1',
+      name: 'Partially Updated Product',
+      price: 100,
+
+      createdAt: new Date(),
+
+      updatedAt: new Date(),
+      description: '',
+      stock: 0,
+    };
+    const partialUpdate = { name: 'Partially Updated Product' };
+
+    productDatabaseRepository.updatePartialById.mockResolvedValue(
+      updatedProduct,
+    );
+
+    const result = await productRepository.updatePartialById(
+      '1',
+      partialUpdate,
+    );
+
+    expect(productDatabaseRepository.updatePartialById).toHaveBeenCalledWith(
+      '1',
+      partialUpdate,
     );
     expect(productCacheRepository.updateById).toHaveBeenCalledWith(
       '1',

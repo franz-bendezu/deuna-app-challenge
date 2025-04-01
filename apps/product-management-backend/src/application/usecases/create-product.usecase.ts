@@ -5,7 +5,7 @@ import {
   PRODUCT_PUBLISHER,
   PRODUCT_REPOSITORY,
 } from '../../domain/constants/injection-tokens';
-import { BaseProduct } from '../../domain/models/base-product.model';
+import { CreateProduct } from '../../domain/models/create-product.model';
 import { ICreateProductUseCase } from '../../domain/usecases/create-product-usecase.interface';
 import { IProductPublisher } from '../../domain/interfaces/event-publisher.interface';
 import { ProductEvents } from '../../domain/constants/events';
@@ -19,7 +19,7 @@ export class CreateProductUseCase implements ICreateProductUseCase {
     private readonly eventPublisher: IProductPublisher,
   ) {}
 
-  async execute(createProductDto: BaseProduct): Promise<Product> {
+  async execute(createProductDto: CreateProduct): Promise<Product> {
     const product = await this.productRepository.create(createProductDto);
     await this.eventPublisher.publish(ProductEvents.CREATED, product);
     return product;

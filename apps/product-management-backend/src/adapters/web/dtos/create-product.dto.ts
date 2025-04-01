@@ -1,46 +1,42 @@
-import { IBaseSharedProduct } from '@app/shared';
-import { Optional } from '@nestjs/common';
+import { ICreateSharedProduct } from '@app/shared';
 import { ApiProperty, ApiSchema } from '@nestjs/swagger';
 import { IsInt, IsNotEmpty, IsNumber, IsString, Min } from 'class-validator';
 
 @ApiSchema({
-  description: 'DTO base para representar un producto en el sistema',
+  description: 'DTO para crear un nuevo producto',
 })
-export class BaseProductDto implements IBaseSharedProduct {
+export class CreateProductDto implements ICreateSharedProduct {
+  @IsNotEmpty()
   @IsString()
-  @Optional()
   @ApiProperty({
     description: 'Nombre del producto',
     example: 'Smartphone X10',
   })
-  nombre?: string;
+  nombre: string;
 
   @IsNotEmpty()
   @IsString()
-  @Optional()
   @ApiProperty({
     description: 'Descripción detallada del producto',
     example:
       'Smartphone de última generación con cámara de 48MP y 128GB de almacenamiento',
   })
-  descripcion?: string;
+  descripcion: string;
 
   @IsNumber({ maxDecimalPlaces: 2 })
-  @Optional()
   @ApiProperty({
     description: 'Precio del producto en la moneda local',
     example: 599.99,
   })
   @Min(0)
-  precio?: number;
+  precio: number;
 
   @IsInt()
-  @Optional()
   @ApiProperty({
     description: 'Cantidad disponible en inventario',
     example: 50,
     type: 'integer',
   })
   @Min(0)
-  stock?: number;
+  stock: number;
 }

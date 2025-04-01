@@ -21,6 +21,7 @@ describe('CreateProductUseCase', () => {
       findById: jest.fn(),
       updateById: jest.fn(),
       deleteById: jest.fn(),
+      updatePartialById: jest.fn(),
     };
 
     mockPublisher = {

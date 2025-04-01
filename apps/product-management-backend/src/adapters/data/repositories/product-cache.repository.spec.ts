@@ -253,6 +253,54 @@ describe('ProductCacheRepository', () => {
     });
   });
 
+  describe('updatePartialById', () => {
+    it('should update partial product in cache and return it when it exists', async () => {
+      const existingProduct: Product = {
+        id: '1',
+        name: 'Original Product',
+        description: 'Original Description',
+        price: 100,
+        stock: 10,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      const updateParams: Partial<Product> = {
+        name: 'Updated Product',
+      };
+
+      const updatedProduct = {
+        ...existingProduct,
+        ...updateParams,
+      };
+
+      mockCacheManager.get.mockResolvedValueOnce(existingProduct);
+      mockCacheManager.set.mockResolvedValue(undefined);
+
+      const result = await repository.updatePartialById('1', updateParams);
+
+      expect(mockCacheManager.get).toHaveBeenCalledWith('product:1');
+      expect(mockCacheManager.set).toHaveBeenCalledWith(
+        'product:1',
+        updatedProduct,
+        3600,
+      );
+      expect(result).toEqual(updatedProduct);
+    });
+
+    it('should return null when product to update does not exist in cache', async () => {
+      mockCacheManager.get.mockResolvedValue(null);
+
+      const result = await repository.updatePartialById('1', {
+        name: 'Updated Product',
+      });
+
+      expect(mockCacheManager.get).toHaveBeenCalledWith('product:1');
+      expect(mockCacheManager.set).not.toHaveBeenCalled();
+      expect(result).toBeNull();
+    });
+  });
+
   describe('deleteById', () => {
     it('should delete product from cache and return true when it exists', async () => {
       const product: Product = {

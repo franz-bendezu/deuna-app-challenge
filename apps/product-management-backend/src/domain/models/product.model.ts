@@ -1,6 +1,6 @@
-import { BaseProduct } from './base-product.model';
+import { CreateProduct } from './create-product.model';
 
-export class Product extends BaseProduct {
+export class Product extends CreateProduct {
   constructor(
     public id: string,
     name: string,

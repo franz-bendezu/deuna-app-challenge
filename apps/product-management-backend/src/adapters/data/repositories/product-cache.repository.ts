@@ -89,6 +89,26 @@ export class ProductCacheRepository implements IProductRepository {
     return null;
   }
 
+  async updatePartialById(
+    id: string,
+    params: Partial<Product>,
+  ): Promise<Product | null> {
+    const cachedProduct = await this.cacheManager.get<Product>(
+      this.generateProductCacheKey(id),
+    );
+    if (cachedProduct) {
+      const updatedProduct = { ...cachedProduct, ...params };
+      await this.cacheManager.set(
+        this.generateProductCacheKey(id),
+        updatedProduct,
+        this.DEFAULT_TTL,
+      );
+      await this.saveProductInCache(updatedProduct);
+      return updatedProduct;
+    }
+    return null;
+  }
+
   async deleteById(id: string): Promise<boolean> {
     const cachedProduct = await this.cacheManager.get<Product>(
       this.generateProductCacheKey(id),

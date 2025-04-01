@@ -1,11 +1,11 @@
 import { ApiProperty, ApiSchema } from '@nestjs/swagger';
-import { BaseProductDto } from './base-product.dto';
+import { CreateProductDto } from './create-product.dto';
 import { ISharedProduct } from '@app/shared';
 
 @ApiSchema({
-  description: 'Datos completos del producto',
+  description: 'DTO para representar un producto en el sistema',
 })
-export class ProductDTO extends BaseProductDto implements ISharedProduct {
+export class ProductDTO extends CreateProductDto implements ISharedProduct {
   @ApiProperty({
     description: 'Identificador único del producto',
     example: '123e4567-e89b-12d3-a456-426614174000',

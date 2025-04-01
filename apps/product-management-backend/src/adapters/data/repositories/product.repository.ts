@@ -1,5 +1,5 @@
 import { Product } from '../../../domain/models/product.model';
-import { BaseProduct } from '../../../domain/models/base-product.model';
+import { CreateProduct } from 'apps/product-management-backend/src/domain/models/create-product.model';
 import { IProductRepository } from '../../../application/repositories/product.repository.interface';
 import { Inject } from '@nestjs/common';
 import {
@@ -16,7 +16,7 @@ export class ProductRepository implements IProductRepository {
     private readonly productCacheRepository: IProductRepository,
   ) {}
 
-  async create(params: BaseProduct): Promise<Product> {
+  async create(params: CreateProduct): Promise<Product> {
     const product = await this.productDatabaseRepository.create(params);
     await this.productCacheRepository.create(product);
     return product;
@@ -46,8 +46,22 @@ export class ProductRepository implements IProductRepository {
     return product;
   }
 
-  async updateById(id: string, params: BaseProduct): Promise<Product | null> {
+  async updateById(id: string, params: CreateProduct): Promise<Product | null> {
     const product = await this.productDatabaseRepository.updateById(id, params);
+    if (product) {
+      await this.productCacheRepository.updateById(id, product);
+    }
+    return product;
+  }
+
+  async updatePartialById(
+    id: string,
+    params: Partial<CreateProduct>,
+  ): Promise<Product | null> {
+    const product = await this.productDatabaseRepository.updatePartialById(
+      id,
+      params,
+    );
     if (product) {
       await this.productCacheRepository.updateById(id, product);
     }
