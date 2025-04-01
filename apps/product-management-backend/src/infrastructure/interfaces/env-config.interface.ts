@@ -9,15 +9,10 @@ export interface KafkaConfiguration {
   clientId: string;
 }
 
-interface AppConfiguration {
-  port: number;
-  environment: string;
-}
-
 export interface EnvironmentConfig {
   redis: CacheConfiguration;
 
   kafka: KafkaConfiguration;
 
-  app: AppConfiguration;
+  port: number;
 }

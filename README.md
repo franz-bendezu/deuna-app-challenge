@@ -119,6 +119,50 @@ pnpm start:dev:backend
 pnpm start:dev:bff
 ```
 
+## Configuración de Variables de Entorno
+
+La aplicación utiliza variables de entorno para su configuración. Estas se definen en el archivo `.env`.
+
+### Configuración de Variables de Entorno
+
+1. Copia el archivo `.env.example` para crear tu propio archivo `.env`:
+
+```bash
+cp .env.example .env
+```
+
+2. Modifica los valores en el archivo `.env` según sea necesario para tu entorno de desarrollo.
+
+### Descripción de las Variables de Entorno
+
+Las siguientes variables de entorno son utilizadas en la aplicación:
+
+#### Configuración de Base de Datos
+- `DB_PASSWORD`: Contraseña de la base de datos PostgreSQL
+- `DB_USER`: Usuario de la base de datos PostgreSQL
+- `DB_NAME`: Nombre de la base de datos PostgreSQL
+- `DB_HOST`: Host de la base de datos PostgreSQL
+- `DB_PORT`: Puerto de la base de datos PostgreSQL
+
+#### Configuración de Prisma
+- `DATABASE_URL`: Cadena de conexión de PostgreSQL para Prisma
+
+#### Configuración del Backend
+- `PORT`: Puerto en el que se ejecuta el servicio backend
+- `NODE_ENV`: Modo de entorno (desarrollo, producción)
+
+#### Configuración de Redis
+- `REDIS_URL`: URL de conexión de Redis
+- `REDIS_TTL`: Tiempo de vida para los datos en caché en milisegundos
+- `REDIS_LRU_SIZE`: Tamaño de la caché LRU
+
+#### Configuración de Kafka
+- `KAFKA_BROKERS`: Lista separada por comas de brokers de Kafka
+- `KAFKA_CLIENT_ID`: ID de cliente para conexiones Kafka
+
+#### Configuración del BFF
+- `BACKEND_URL`: URL del servicio backend
+
 ## Ejecución de Pruebas
 
 ### Pruebas Unitarias

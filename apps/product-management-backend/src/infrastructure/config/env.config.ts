@@ -10,8 +10,5 @@ export default (): EnvironmentConfig => ({
     brokers: (process.env.KAFKA_BROKERS || 'kafka:9092').split(','),
     clientId: process.env.KAFKA_CLIENT_ID || 'product-management-service',
   },
-  app: {
-    port: parseInt(process.env.PORT || '3000'),
-    environment: process.env.NODE_ENV || 'development',
-  },
+  port: parseInt(process.env.PORT || '3000'),
 });
