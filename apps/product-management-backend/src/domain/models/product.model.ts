@@ -3,10 +3,10 @@ import { CreateProduct } from './create-product.model';
 export class Product extends CreateProduct {
   constructor(
     public id: string,
-    name: string,
-    description: string,
-    price: number,
-    stock: number,
+    public name: string,
+    public description: string,
+    public price: number,
+    public stock: number,
     public createdAt: Date,
     public updatedAt: Date,
   ) {
