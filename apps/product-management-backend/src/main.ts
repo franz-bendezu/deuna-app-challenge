@@ -2,7 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import { ProductManagementBackendModule } from './product-management-backend.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
-import { AppConfiguration } from './infrastructure/interfaces/env-config.interface';
 import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
@@ -19,7 +18,7 @@ async function bootstrap() {
     jsonDocumentUrl: 'swagger/json',
   });
   app.useGlobalPipes(new ValidationPipe());
-  const configService = app.get(ConfigService<AppConfiguration>);
+  const configService = app.get(ConfigService);
   const port = configService.get<number>('port');
   await app.listen(port ?? 3000);
   console.log(`Application is running on: ${await app.getUrl()}`);
