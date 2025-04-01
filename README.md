@@ -240,6 +240,7 @@ La colección BFF contiene solicitudes para:
 - Obtener un producto por ID
 - Crear un nuevo producto
 - Actualizar un producto existente
+- Actualizar un producto parcialmente
 - Eliminar un producto
 
 Todas las operaciones se realizan a través del endpoint `/graphql` utilizando diferentes queries y mutations.
@@ -251,6 +252,7 @@ La colección Backend contiene solicitudes para:
 - Obtener un producto por ID (GET /products/{id})
 - Crear un nuevo producto (POST /products)
 - Actualizar un producto (PUT /products/{id})
+- Actualizar un producto parcialmente (PATCH /products/{id})
 - Eliminar un producto (DELETE /products/{id})
 - Acceder a la documentación Swagger (GET /swagger)
 
@@ -260,9 +262,10 @@ La colección de pruebas de integración está diseñada para ejecutarse secuenc
 1. Se pueda crear un producto en el Backend
 2. El producto sea accesible desde el BFF
 3. Se pueda actualizar el producto desde el BFF
-4. Los cambios se reflejen en el Backend
-5. Se pueda eliminar el producto desde el Backend
-6. El BFF reporte correctamente que el producto ya no existe
+4. Se pueda actualizar parcialmente el producto desde el BFF
+5. Los cambios se reflejen en el Backend
+6. Se pueda eliminar el producto desde el Backend
+7. El BFF reporte correctamente que el producto ya no existe
 
 Para ejecutar todas las pruebas:
 1. Abre la colección "DeUna Integration Tests"
@@ -352,6 +355,27 @@ mutation {
 }
 ```
 
+#### Actualizar producto parcialmente
+```graphql
+mutation {
+  updateProduct(
+    id: "1", 
+    input: {
+      price: 129.99,
+      stock: 75
+    }
+  ) {
+    id
+    name
+    description
+    price
+    stock
+    createdAt
+    updatedAt
+  }
+}
+```
+
 #### Eliminar producto
 ```graphql
 mutation {
@@ -391,6 +415,16 @@ curl -X PUT http://localhost:3000/products/1 \
     "nombre": "Producto Actualizado",
     "descripcion": "Descripción actualizada",
     "precio": 149.99,
+    "stock": 75
+  }'
+```
+
+#### Actualizar producto parcialmente
+```bash
+curl -X PATCH http://localhost:3000/products/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "precio": 129.99,
     "stock": 75
   }'
 ```

@@ -145,6 +145,13 @@ export class ProductsController {
     description:
       'Actualiza parcialmente la información de un producto existente en el catálogo.',
   })
+  @ApiOkResponse({
+    description: 'Información parcialmente actualizada del producto',
+    type: ProductDTO,
+  })
+  @ApiNotFoundResponse({
+    description: 'No se encontró el producto a actualizar',
+  })
   async partialUpdate(
     @Param(ProductsController.PATH_ID_PARAM) id: string,
     @Body() updateProductDto: BaseProductDto,
