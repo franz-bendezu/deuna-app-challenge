@@ -22,19 +22,19 @@ describe('Environment Configuration', () => {
 
     expect(config.port).toBe(3001);
     expect(config.backend.url).toBe('http://localhost:3000');
-    expect(config.backend.productsEndpoint).toBe('/products');
+    expect(config.backend.productsEndpoint).toBe('/productos');
   });
 
   it('should use environment variables when set', () => {
     // Set environment variables
     process.env.BFF_PORT = '4000';
     process.env.BACKEND_URL = 'http://api.example.com';
-    process.env.BACKEND_PRODUCTS_ENDPOINT = '/api/products';
+    process.env.BACKEND_PRODUCTS_ENDPOINT = '/api/productos';
 
     const config = envConfig();
 
     expect(config.port).toBe(4000);
     expect(config.backend.url).toBe('http://api.example.com');
-    expect(config.backend.productsEndpoint).toBe('/api/products');
+    expect(config.backend.productsEndpoint).toBe('/api/productos');
   });
 });

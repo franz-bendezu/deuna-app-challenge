@@ -1,20 +1,25 @@
-import { Field, ObjectType } from '@nestjs/graphql';
-import { IProductResponse } from '../interfaces/product.interface';
+import { Field, Float, ID, Int, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
-export class ProductDTO implements IProductResponse {
-  @Field()
+export class ProductDTO {
+  @Field(() => ID)
   id: string;
+
   @Field()
   nombre: string;
+
   @Field()
   descripcion: string;
-  @Field()
+
+  @Field(() => Float)
   precio: number;
-  @Field()
+
+  @Field(() => Int)
   stock: number;
+
   @Field()
   fechaCreacion: string;
+
   @Field()
   fechaActualizacion: string;
 }

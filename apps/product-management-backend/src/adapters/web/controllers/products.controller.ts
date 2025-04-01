@@ -41,7 +41,7 @@ import { IUpdatePartialProductUseCase } from 'apps/product-management-backend/sr
 @ApiTags('productos')
 @Controller(ProductsController.PATH)
 export class ProductsController {
-  static readonly PATH = 'products';
+  static readonly PATH = 'productos';
   static readonly PATH_ID_PARAM = 'id';
   static readonly PATH_ID = `:${ProductsController.PATH_ID_PARAM}`;
   constructor(
@@ -63,10 +63,10 @@ export class ProductsController {
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
     summary: 'Crear producto',
-    description: 'Registra un nuevo producto en el catálogo del sistema.',
+    description: 'Crea un nuevo producto en el sistema',
   })
   @ApiCreatedResponse({
-    description: 'Producto creado exitosamente',
+    description: 'El producto ha sido creado exitosamente',
     type: ProductDTO,
   })
   async create(

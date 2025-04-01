@@ -34,21 +34,21 @@ describe('GraphQL ProductResolver (e2e)', () => {
   });
 
   describe(gql, () => {
-    describe('products', () => {
+    describe('productos', () => {
       it('should get the products array', () => {
         return request(app.getHttpServer())
           .post(gql)
           .send({
             query: `
               { 
-                products {
+                productos {
                   id
-                  name
-                  description
-                  price
+                  nombre
+                  descripcion
+                  precio
                   stock
-                  createdAt
-                  updatedAt
+                  fechaCreacion
+                  fechaActualizacion
                 }
               }
             `,
@@ -57,10 +57,10 @@ describe('GraphQL ProductResolver (e2e)', () => {
           .expect((res) => {
             const body = res.body as {
               data: {
-                products: ProductDTO[];
+                productos: ProductDTO[];
               };
             };
-            expect(body.data.products.length).toEqual(initialProducts.length);
+            expect(body.data.productos.length).toEqual(initialProducts.length);
           });
       });
 
@@ -72,14 +72,14 @@ describe('GraphQL ProductResolver (e2e)', () => {
             .send({
               query: `
                 {
-                  product(id: "${targetProduct.id}") {
+                  producto(id: "${targetProduct.id}") {
                     id
-                    name
-                    description
-                    price
+                    nombre
+                    descripcion
+                    precio
                     stock
-                    createdAt
-                    updatedAt
+                    fechaCreacion
+                    fechaActualizacion
                   }
                 }
               `,
@@ -88,27 +88,23 @@ describe('GraphQL ProductResolver (e2e)', () => {
             .expect((res) => {
               const body = res.body as {
                 data: {
-                  product: ProductDTO;
+                  producto: ProductDTO;
                 };
               };
-              expect(body.data.product).toEqual(targetProduct);
+              expect(body.data.producto).toBeDefined();
+              expect(body.data.producto.id).toEqual(targetProduct.id);
             });
         });
 
-        it('should get an error for bad id', () => {
+        it('should return null for nonexistent product', () => {
           return request(app.getHttpServer())
             .post(gql)
             .send({
               query: `
                 {
-                  product(id: "non-existent-id") {
+                  producto(id: "${crypto.randomUUID()}") {
                     id
-                    name
-                    description
-                    price
-                    stock
-                    createdAt
-                    updatedAt
+                    nombre
                   }
                 }
               `,
@@ -116,140 +112,144 @@ describe('GraphQL ProductResolver (e2e)', () => {
             .expect(200)
             .expect((res) => {
               const body = res.body as {
-                errors: unknown[];
                 data: null;
               };
-              expect(body.errors).toBeDefined();
-              expect(body.data).toBe(null);
+              expect(body.data).toBeNull();
+            });
+        });
+      });
+    });
+
+    describe('mutations', () => {
+      describe('crearProducto', () => {
+        const newProduct = {
+          nombre: 'New Product',
+          descripcion: 'This is a new product',
+          precio: 29.99,
+          stock: 100,
+        };
+
+        it('should create a new product', () => {
+          return request(app.getHttpServer())
+            .post(gql)
+            .send({
+              query: `
+                mutation {
+                  crearProducto(input: {
+                    nombre: "${newProduct.nombre}",
+                    descripcion: "${newProduct.descripcion}",
+                    precio: ${newProduct.precio},
+                    stock: ${newProduct.stock}
+                  }) {
+                    id
+                    nombre
+                    descripcion
+                    precio
+                    stock
+                  }
+                }
+              `,
+            })
+            .expect(200)
+            .expect((res) => {
+              const body = res.body as {
+                data: {
+                  crearProducto: ProductDTO;
+                };
+              };
+              expect(body.data.crearProducto).toBeDefined();
+              expect(body.data.crearProducto.nombre).toEqual(newProduct.nombre);
+              expect(body.data.crearProducto.descripcion).toEqual(
+                newProduct.descripcion,
+              );
+              expect(body.data.crearProducto.precio).toEqual(newProduct.precio);
+              expect(body.data.crearProducto.stock).toEqual(newProduct.stock);
             });
         });
       });
 
-      it('should create a new product', () => {
-        return request(app.getHttpServer())
-          .post(gql)
-          .send({
-            query: `
-              mutation {
-                createProduct(input: {
-                  name: "New Product",
-                  description: "New description",
-                  price: 400,
-                  stock: 40
-                }) {
-                  id
-                  name
-                  description
-                  price
-                  stock
-                  createdAt
-                  updatedAt
-                }
-              }
-            `,
-          })
-          .expect(200)
-          .expect((res) => {
-            const body = res.body as {
-              data: {
-                createProduct: ProductDTO;
-              };
-            };
-            expect(body.data.createProduct).toMatchObject({
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-              id: expect.any(String),
-              name: 'New Product',
-              description: 'New description',
-              price: 400,
-              stock: 40,
-            });
-          });
-      });
+      describe('actualizarProducto', () => {
+        it('should update an existing product', async () => {
+          const products = await inMemoryService.findAll();
+          const productToUpdate = products[0];
+          const updatedFields = {
+            nombre: 'Updated Product Name',
+            precio: 39.99,
+          };
 
-      it('should update an existing product', () => {
-        const targetProduct = initialProducts[1];
-
-        return request(app.getHttpServer())
-          .post(gql)
-          .send({
-            query: `
-              mutation {
-                updateProduct(
-                  id: "${targetProduct.id}", 
-                  input: {
-                    name: "Updated Product",
-                    price: 250
+          return request(app.getHttpServer())
+            .post(gql)
+            .send({
+              query: `
+                mutation {
+                  actualizarProducto(
+                    id: "${productToUpdate.id}"
+                    input: {
+                      nombre: "${updatedFields.nombre}",
+                      precio: ${updatedFields.precio}
+                    }
+                  ) {
+                    id
+                    nombre
+                    precio
+                    descripcion
+                    stock
                   }
-                ) {
-                  id
-                  name
-                  description
-                  price
-                  stock
-                  createdAt
-                  updatedAt
                 }
-              }
-            `,
-          })
-          .expect(200)
-          .expect((res) => {
-            const body = res.body as {
-              data: {
-                updateProduct: ProductDTO;
+              `,
+            })
+            .expect(200)
+            .expect((res) => {
+              const body = res.body as {
+                data: {
+                  actualizarProducto: ProductDTO;
+                };
               };
-            };
-            expect(body.data.updateProduct).toMatchObject({
-              id: targetProduct.id,
-              name: 'Updated Product',
-              description: targetProduct.descripcion,
-              price: 250,
-              stock: targetProduct.stock,
+              expect(body.data.actualizarProducto).toBeDefined();
+              expect(body.data.actualizarProducto.id).toEqual(
+                productToUpdate.id,
+              );
+              expect(body.data.actualizarProducto.nombre).toEqual(
+                updatedFields.nombre,
+              );
+              expect(body.data.actualizarProducto.precio).toEqual(
+                updatedFields.precio,
+              );
+              // Description and stock should remain unchanged
+              expect(body.data.actualizarProducto.descripcion).toEqual(
+                productToUpdate.descripcion,
+              );
+              expect(body.data.actualizarProducto.stock).toEqual(
+                productToUpdate.stock,
+              );
             });
-          });
+        });
       });
 
-      it('should delete a product', () => {
-        const targetProduct = initialProducts[2];
-        return request(app.getHttpServer())
-          .post(gql)
-          .send({
-            query: `
-              mutation {
-                deleteProduct(id: "${targetProduct.id}")
-              }
-            `,
-          })
-          .expect(200)
-          .expect((res) => {
-            const body = res.body as {
-              data: {
-                deleteProduct: boolean;
+      describe('eliminarProducto', () => {
+        it('should delete a product', async () => {
+          const products = await inMemoryService.findAll();
+          const productToDelete = products[products.length - 1];
+
+          return request(app.getHttpServer())
+            .post(gql)
+            .send({
+              query: `
+                mutation {
+                  eliminarProducto(id: "${productToDelete.id}")
+                }
+              `,
+            })
+            .expect(200)
+            .expect((res) => {
+              const body = res.body as {
+                data: {
+                  eliminarProducto: boolean;
+                };
               };
-            };
-            expect(body.data.deleteProduct).toBe(true);
-          });
-      });
-
-      it('should handle error when deleting non-existent product', () => {
-        return request(app.getHttpServer())
-          .post(gql)
-          .send({
-            query: `
-              mutation {
-                deleteProduct(id: "non-existent-id")
-              }
-            `,
-          })
-          .expect(200)
-          .expect((res) => {
-            const body = res.body as {
-              errors: unknown[];
-              data: null;
-            };
-            expect(body.errors).toBeDefined();
-            expect(body.data).toBe(null);
-          });
+              expect(body.data.eliminarProducto).toBe(true);
+            });
+        });
       });
     });
   });

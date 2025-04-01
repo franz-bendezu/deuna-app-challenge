@@ -279,25 +279,26 @@ La colección utiliza variables de entorno para facilitar las pruebas en diferen
 
 #### Pruebas de la API BFF (GraphQL)
 
-La colección BFF contiene solicitudes para:
-- Obtener todos los productos
-- Obtener un producto por ID
-- Crear un nuevo producto
-- Actualizar un producto existente
-- Actualizar un producto parcialmente
-- Eliminar un producto
+La colección BFF contiene operaciones GraphQL para:
 
-Todas las operaciones se realizan a través del endpoint `/graphql` utilizando diferentes queries y mutations.
+- Consultas (Queries):
+  - `productos`: Obtener todos los productos
+  - `producto`: Obtener un producto por ID
+
+- Mutaciones (Mutations):
+  - `crearProducto`: Crear un nuevo producto
+  - `actualizarProducto`: Actualizar un producto existente
+  - `eliminarProducto`: Eliminar un producto
 
 #### Pruebas de la API Backend (REST)
 
 La colección Backend contiene solicitudes para:
-- Obtener todos los productos (GET /products)
-- Obtener un producto por ID (GET /products/{id})
-- Crear un nuevo producto (POST /products)
-- Actualizar un producto (PUT /products/{id})
-- Actualizar un producto parcialmente (PATCH /products/{id})
-- Eliminar un producto (DELETE /products/{id})
+- Obtener todos los productos (GET /productos)
+- Obtener un producto por ID (GET /productos/{id})
+- Crear un nuevo producto (POST /productos)
+- Actualizar un producto (PUT /productos/{id})
+- Actualizar un producto parcialmente (PATCH /productos/{id})
+- Eliminar un producto (DELETE /productos/{id})
 - Acceder a la documentación Swagger (GET /swagger)
 
 #### Ejecución de las pruebas de integración
@@ -331,14 +332,14 @@ Para ejecutar todas las pruebas:
 #### Consultar todos los productos
 ```graphql
 {
-  products {
+  productos {
     id
-    name
-    description
-    price
+    nombre
+    descripcion
+    precio
     stock
-    createdAt
-    updatedAt
+    fechaCreacion
+    fechaActualizacion
   }
 }
 ```
@@ -346,14 +347,14 @@ Para ejecutar todas las pruebas:
 #### Obtener producto por ID
 ```graphql
 {
-  product(id: "1") {
+  producto(id: "1") {
     id
-    name
-    description
-    price
+    nombre
+    descripcion
+    precio
     stock
-    createdAt
-    updatedAt
+    fechaCreacion
+    fechaActualizacion
   }
 }
 ```
@@ -361,19 +362,19 @@ Para ejecutar todas las pruebas:
 #### Crear nuevo producto
 ```graphql
 mutation {
-  createProduct(input: {
-    name: "Nuevo Producto",
-    description: "Descripción del nuevo producto",
-    price: 99.99,
+  crearProducto(input: {
+    nombre: "Nuevo Producto",
+    descripcion: "Descripción del nuevo producto",
+    precio: 99.99,
     stock: 50
   }) {
     id
-    name
-    description
-    price
+    nombre
+    descripcion
+    precio
     stock
-    createdAt
-    updatedAt
+    fechaCreacion
+    fechaActualizacion
   }
 }
 ```
@@ -381,20 +382,20 @@ mutation {
 #### Actualizar producto
 ```graphql
 mutation {
-  updateProduct(
+  actualizarProducto(
     id: "1", 
     input: {
-      name: "Producto Actualizado",
-      price: 129.99
+      nombre: "Producto Actualizado",
+      precio: 129.99
     }
   ) {
     id
-    name
-    description
-    price
+    nombre
+    descripcion
+    precio
     stock
-    createdAt
-    updatedAt
+    fechaCreacion
+    fechaActualizacion
   }
 }
 ```
@@ -402,20 +403,20 @@ mutation {
 #### Actualizar producto parcialmente
 ```graphql
 mutation {
-  updateProduct(
+  actualizarProducto(
     id: "1", 
     input: {
-      price: 129.99,
+      precio: 129.99,
       stock: 75
     }
   ) {
     id
-    name
-    description
-    price
+    nombre
+    descripcion
+    precio
     stock
-    createdAt
-    updatedAt
+    fechaCreacion
+    fechaActualizacion
   }
 }
 ```
@@ -423,7 +424,7 @@ mutation {
 #### Eliminar producto
 ```graphql
 mutation {
-  deleteProduct(id: "1")
+  eliminarProducto(id: "1")
 }
 ```
 
@@ -431,17 +432,17 @@ mutation {
 
 #### Obtener todos los productos
 ```bash
-curl -X GET http://localhost:3000/products
+curl -X GET http://localhost:3000/productos
 ```
 
 #### Obtener producto por ID
 ```bash
-curl -X GET http://localhost:3000/products/1
+curl -X GET http://localhost:3000/productos/1
 ```
 
 #### Crear nuevo producto
 ```bash
-curl -X POST http://localhost:3000/products \
+curl -X POST http://localhost:3000/productos \
   -H "Content-Type: application/json" \
   -d '{
     "nombre": "Nuevo Producto",
@@ -453,7 +454,7 @@ curl -X POST http://localhost:3000/products \
 
 #### Actualizar producto
 ```bash
-curl -X PUT http://localhost:3000/products/1 \
+curl -X PUT http://localhost:3000/productos/1 \
   -H "Content-Type: application/json" \
   -d '{
     "nombre": "Producto Actualizado",
@@ -465,7 +466,7 @@ curl -X PUT http://localhost:3000/products/1 \
 
 #### Actualizar producto parcialmente
 ```bash
-curl -X PATCH http://localhost:3000/products/1 \
+curl -X PATCH http://localhost:3000/productos/1 \
   -H "Content-Type: application/json" \
   -d '{
     "precio": 129.99,
@@ -475,7 +476,7 @@ curl -X PATCH http://localhost:3000/products/1 \
 
 #### Eliminar producto
 ```bash
-curl -X DELETE http://localhost:3000/products/1
+curl -X DELETE http://localhost:3000/productos/1
 ```
 
 ## Formatos de datos
@@ -497,11 +498,11 @@ curl -X DELETE http://localhost:3000/products/1
 ```json
 {
   "id": "1",
-  "name": "Producto de ejemplo",
-  "description": "Descripción detallada del producto",
-  "price": 99.99,
+  "nombre": "Producto de ejemplo",
+  "descripcion": "Descripción detallada del producto",
+  "precio": 99.99,
   "stock": 100,
-  "createdAt": "2023-06-15T10:30:00Z",
-  "updatedAt": "2023-06-15T10:30:00Z"
+  "fechaCreacion": "2023-06-15T10:30:00Z",
+  "fechaActualizacion": "2023-06-15T10:30:00Z"
 }
 ```

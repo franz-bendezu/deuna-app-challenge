@@ -7,32 +7,32 @@ import { CreateProductInput, UpdateProductInput } from '../dto/product.input';
 export class ProductResolver {
   constructor(private readonly productService: ProductService) {}
 
-  @Query(() => [ProductDTO], { name: 'products' })
+  @Query(() => [ProductDTO], { name: 'productos' })
   async getProducts(): Promise<ProductDTO[]> {
     return this.productService.findAll();
   }
 
-  @Query(() => ProductDTO, { name: 'product' })
+  @Query(() => ProductDTO, { name: 'producto' })
   async getProduct(@Args('id') id: string): Promise<ProductDTO> {
     return this.productService.findOne(id);
   }
 
-  @Mutation(() => ProductDTO, { name: 'createProduct' })
+  @Mutation(() => ProductDTO, { name: 'crearProducto' })
   async createProduct(
-    @Args('input') input: CreateProductInput,
+    @Args('input') createProductInput: CreateProductInput,
   ): Promise<ProductDTO> {
-    return this.productService.create(input);
+    return this.productService.create(createProductInput);
   }
 
-  @Mutation(() => ProductDTO, { name: 'updateProduct' })
+  @Mutation(() => ProductDTO, { name: 'actualizarProducto' })
   async updateProduct(
     @Args('id') id: string,
-    @Args('input') input: UpdateProductInput,
+    @Args('input') updateProductInput: UpdateProductInput,
   ): Promise<ProductDTO> {
-    return this.productService.update(id, input);
+    return this.productService.update(id, updateProductInput);
   }
 
-  @Mutation(() => Boolean, { name: 'deleteProduct' })
+  @Mutation(() => Boolean, { name: 'eliminarProducto' })
   async deleteProduct(@Args('id') id: string): Promise<boolean> {
     return this.productService.remove(id);
   }

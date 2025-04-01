@@ -1,35 +1,31 @@
-import { Field, InputType } from '@nestjs/graphql';
-import {
-  ICreateProductRequest,
-  IUpdateProductRequest,
-} from '../interfaces/product.interface';
+import { Field, Float, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
-export class CreateProductInput implements ICreateProductRequest {
+export class CreateProductInput {
   @Field()
   nombre: string;
 
   @Field()
   descripcion: string;
 
-  @Field()
+  @Field(() => Float)
   precio: number;
 
-  @Field()
+  @Field(() => Int)
   stock: number;
 }
 
 @InputType()
-export class UpdateProductInput implements IUpdateProductRequest {
+export class UpdateProductInput {
   @Field({ nullable: true })
   nombre?: string;
 
   @Field({ nullable: true })
   descripcion?: string;
 
-  @Field({ nullable: true })
+  @Field(() => Float, { nullable: true })
   precio?: number;
 
-  @Field({ nullable: true })
+  @Field(() => Int, { nullable: true })
   stock?: number;
 }

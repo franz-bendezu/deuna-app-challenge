@@ -3,36 +3,36 @@
 # ------------------------------------------------------
 
 type ProductDTO {
-  id: String!
+  id: ID!
   nombre: String!
   descripcion: String!
   precio: Float!
-  stock: Float!
+  stock: Int!
   fechaCreacion: String!
   fechaActualizacion: String!
 }
 
 type Query {
-  products: [ProductDTO!]!
-  product(id: String!): ProductDTO!
+  productos: [ProductDTO!]!
+  producto(id: String!): ProductDTO!
 }
 
 type Mutation {
-  createProduct(input: CreateProductInput!): ProductDTO!
-  updateProduct(id: String!, input: UpdateProductInput!): ProductDTO!
-  deleteProduct(id: String!): Boolean!
+  crearProducto(input: CreateProductInput!): ProductDTO!
+  actualizarProducto(id: String!, input: UpdateProductInput!): ProductDTO!
+  eliminarProducto(id: String!): Boolean!
 }
 
 input CreateProductInput {
   nombre: String!
   descripcion: String!
   precio: Float!
-  stock: Float!
+  stock: Int!
 }
 
 input UpdateProductInput {
   nombre: String
   descripcion: String
   precio: Float
-  stock: Float
+  stock: Int
 }

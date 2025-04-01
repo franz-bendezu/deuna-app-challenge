@@ -43,7 +43,7 @@ export class ProductService implements IProductService {
       );
       return data;
     } catch (error) {
-      throw new ApiError(error, 'Product not found', 404);
+      throw new ApiError(error, `Failed to fetch product with id ${id}`, 500);
     }
   }
 
@@ -56,7 +56,7 @@ export class ProductService implements IProductService {
       );
       return data;
     } catch (error) {
-      throw new ApiError(error, 'Failed to create product', 400);
+      throw new ApiError(error, 'Failed to create product', 500);
     }
   }
 
@@ -73,7 +73,7 @@ export class ProductService implements IProductService {
       );
       return data;
     } catch (error) {
-      throw new ApiError(error, 'Failed to update product', 400);
+      throw new ApiError(error, `Failed to update product with id ${id}`, 500);
     }
   }
 
@@ -82,7 +82,7 @@ export class ProductService implements IProductService {
       await firstValueFrom(this.httpService.delete(`${this.API_URL}/${id}`));
       return true;
     } catch (error) {
-      throw new ApiError(error, 'Failed to delete product', 400);
+      throw new ApiError(error, `Failed to delete product with id ${id}`, 500);
     }
   }
 }
