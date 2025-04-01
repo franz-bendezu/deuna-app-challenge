@@ -69,10 +69,10 @@ graph TD
 
 Esta aplicación ofrece dos métodos de configuración para adaptarse a diferentes flujos de trabajo:
 
-| Método | Caso de uso | Ventajas | Configuración | Puertos |
-|--------|-------------|----------|---------------|---------|
-| **Docker Compose (Prod)** | Producción, CI/CD | Entorno completo aislado | `docker compose up` | Backend: 4000:3000, BFF: 4001:3001 |
-| **Docker Compose (Local)** | Desarrollo local | Infraestructura dockerizada + servicios locales | `docker compose -f docker-compose.local.yml up` | Backend: 3000, BFF: 3001 |
+| Método | Caso de uso | Ventajas | Configuración |
+|--------|-------------|----------|---------------|
+| **Docker Compose (Prod)** | Producción, CI/CD | Entorno completo aislado | `docker compose up` |
+| **Docker Compose (Local)** | Desarrollo local | Infraestructura dockerizada + servicios locales | `docker compose -f docker-compose.local.yml up` |
 
 ### 1. Configuración con Docker Compose (Producción)
 
@@ -135,16 +135,14 @@ pnpm start:dev:bff      # Terminal 2 (Puerto 3001)
 ```
 
 Con esta configuración:
-- Solo PostgreSQL, Redis y Kafka se ejecutan en Docker
-- Los servicios de aplicación se ejecutan localmente con hot-reload
-  - Backend en puerto 3000
-  - BFF en puerto 3001
-- Los servicios de infraestructura se mapean a los siguientes puertos:
+- Solo PostgreSQL, Redis y Kafka se ejecutan en Docker con los siguientes puertos:
   - PostgreSQL: Accesible en el puerto 5432
   - Redis: Accesible en el puerto 6379
   - Kafka: Accesible en el puerto 9092
   - Kafka UI: Accesible en el puerto 8080
-- Facilita el desarrollo y la depuración
+- Los servicios de aplicación se ejecutan localmente con hot-reload:
+  - Backend: Se ejecuta localmente en el puerto 3000
+  - BFF: Se ejecuta localmente en el puerto 3001
 
 ## Configuración de Variables de Entorno
 
@@ -294,11 +292,11 @@ La colección utiliza variables de entorno para facilitar las pruebas en diferen
 
 ### Variables de entorno
 
-En el ambiente de desarrollo local (docker-compose.local.yml):
+Para ambientes de desarrollo local (docker-compose.local.yml + servicios locales):
 - `backend_url`: URL base para el servicio Backend (http://localhost:3000)
 - `bff_url`: URL base para el servicio BFF (http://localhost:3001)
 
-En el ambiente de producción (docker-compose.yml):
+Para ambientes de producción con Docker Compose (docker-compose.yml):
 - `backend_url`: URL base para el servicio Backend (http://localhost:4000)
 - `bff_url`: URL base para el servicio BFF (http://localhost:4001)
 
@@ -385,7 +383,7 @@ Para ejecutar todas las pruebas:
 #### Obtener producto por ID
 ```graphql
 {
-  producto(id: "1") {
+  producto(id: "10e32a5d-0584-4b9e-a5eb-2ea5bd75f836") {
     id
     nombre
     descripcion
@@ -421,7 +419,7 @@ mutation {
 ```graphql
 mutation {
   actualizarProducto(
-    id: "1", 
+    id: "10e32a5d-0584-4b9e-a5eb-2ea5bd75f836", 
     input: {
       nombre: "Producto Actualizado",
       precio: 129.99
@@ -441,20 +439,20 @@ mutation {
 #### Eliminar producto
 ```graphql
 mutation {
-  eliminarProducto(id: "1")
+  eliminarProducto(id: "10e32a5d-0584-4b9e-a5eb-2ea5bd75f836")
 }
 ```
 
 ### Ejemplos de Backend (REST API)
 
-#### Obtener todos los productos
+Para entorno de desarrollo local:
 ```bash
 curl -X GET http://localhost:3000/productos
 ```
 
-#### Obtener producto por ID
+Para entorno dockerizado con docker-compose.yml:
 ```bash
-curl -X GET http://localhost:3000/productos/1
+curl -X GET http://localhost:4000/productos
 ```
 
 #### Crear nuevo producto
@@ -471,7 +469,7 @@ curl -X POST http://localhost:3000/productos \
 
 #### Actualizar producto
 ```bash
-curl -X PUT http://localhost:3000/productos/1 \
+curl -X PUT http://localhost:3000/productos/10e32a5d-0584-4b9e-a5eb-2ea5bd75f836 \
   -H "Content-Type: application/json" \
   -d '{
     "nombre": "Producto Actualizado",
@@ -483,7 +481,7 @@ curl -X PUT http://localhost:3000/productos/1 \
 
 #### Actualizar producto parcialmente
 ```bash
-curl -X PATCH http://localhost:3000/productos/1 \
+curl -X PATCH http://localhost:3000/productos/10e32a5d-0584-4b9e-a5eb-2ea5bd75f836 \
   -H "Content-Type: application/json" \
   -d '{
     "precio": 129.99,
@@ -493,7 +491,7 @@ curl -X PATCH http://localhost:3000/productos/1 \
 
 #### Eliminar producto
 ```bash
-curl -X DELETE http://localhost:3000/productos/1
+curl -X DELETE http://localhost:3000/productos/10e32a5d-0584-4b9e-a5eb-2ea5bd75f836
 ```
 
 ## Formatos de datos
@@ -501,7 +499,7 @@ curl -X DELETE http://localhost:3000/productos/1
 ### Backend REST API (Product DTO)
 ```json
 {
-  "id": "1",
+  "id": "10e32a5d-0584-4b9e-a5eb-2ea5bd75f836",
   "nombre": "Producto de ejemplo",
   "descripcion": "Descripción detallada del producto",
   "precio": 99.99,
@@ -514,7 +512,7 @@ curl -X DELETE http://localhost:3000/productos/1
 ### BFF GraphQL API (Product DTO)
 ```json
 {
-  "id": "1",
+  "id": "10e32a5d-0584-4b9e-a5eb-2ea5bd75f836",
   "nombre": "Producto de ejemplo",
   "descripcion": "Descripción detallada del producto",
   "precio": 99.99,
