@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "e4953aa4-175a-43a0-9fc5-7bc62c293337",
+		"_postman_id": "d1d84986-9dc2-4bfb-bd5a-04a7d1bf0f72",
 		"name": "Deuna Product Management BFF",
 		"description": "Colección para probar la API GraphQL del BFF de Gestión de Productos",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -15,7 +15,7 @@
 				"body": {
 					"mode": "graphql",
 					"graphql": {
-						"query": "query {\n  products {\n    id\n    nombre\n    descripcion\n    precio\n    stock\n    fechaCreacion\n    fechaActualizacion\n  }\n}",
+						"query": "query {\n  productos {\n    id\n    nombre\n    descripcion\n    precio\n    stock\n    fechaCreacion\n    fechaActualizacion\n  }\n}",
 						"variables": ""
 					}
 				},
@@ -33,31 +33,6 @@
 			"response": []
 		},
 		{
-			"name": "Obtener producto por ID",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "graphql",
-					"graphql": {
-						"query": "query($id: String!) {\n  product(id: $id) {\n    id\n    nombre\n    descripcion\n    precio\n    stock\n    fechaCreacion\n    fechaActualizacion\n  }\n}",
-						"variables": "{\n  \"id\": \"1\"\n}"
-					}
-				},
-				"url": {
-					"raw": "{{bff_url}}/graphql",
-					"host": [
-						"{{bff_url}}"
-					],
-					"path": [
-						"graphql"
-					]
-				},
-				"description": "Obtiene la información detallada de un producto específico mediante su ID"
-			},
-			"response": []
-		},
-		{
 			"name": "Crear nuevo producto",
 			"request": {
 				"method": "POST",
@@ -65,7 +40,7 @@
 				"body": {
 					"mode": "graphql",
 					"graphql": {
-						"query": "mutation($input: CreateProductInput!) {\n  createProduct(input: $input) {\n    id\n    nombre\n    descripcion\n    precio\n    stock\n    fechaCreacion\n    fechaActualizacion\n  }\n}",
+						"query": "mutation($input: CreateProductInput!) {\n  crearProducto(input: $input) {\n    id\n    nombre\n    descripcion\n    precio\n    stock\n    fechaCreacion\n    fechaActualizacion\n  }\n}",
 						"variables": "{\n  \"input\": {\n    \"nombre\": \"Nuevo Producto\",\n    \"descripcion\": \"Descripción detallada del nuevo producto\",\n    \"precio\": 99.99,\n    \"stock\": 100\n  }\n}"
 					}
 				},
@@ -83,6 +58,31 @@
 			"response": []
 		},
 		{
+			"name": "Obtener producto por ID",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query($id: String!) {\n  producto(id: $id) {\n    id\n    nombre\n    descripcion\n    precio\n    stock\n    fechaCreacion\n    fechaActualizacion\n  }\n}",
+						"variables": "{\n  \"id\": \"e3d5fa5d-1474-4279-ac8e-a6c3f014848d\"\n}"
+					}
+				},
+				"url": {
+					"raw": "{{bff_url}}/graphql",
+					"host": [
+						"{{bff_url}}"
+					],
+					"path": [
+						"graphql"
+					]
+				},
+				"description": "Obtiene la información detallada de un producto específico mediante su ID"
+			},
+			"response": []
+		},
+		{
 			"name": "Actualizar producto",
 			"request": {
 				"method": "POST",
@@ -90,8 +90,8 @@
 				"body": {
 					"mode": "graphql",
 					"graphql": {
-						"query": "mutation($id: String!, $input: UpdateProductInput!) {\n  updateProduct(id: $id, input: $input) {\n    id\n    nombre\n    descripcion\n    precio\n    stock\n    fechaCreacion\n    fechaActualizacion\n  }\n}",
-						"variables": "{\n  \"id\": \"1\",\n  \"input\": {\n    \"nombre\": \"Producto Actualizado\",\n    \"descripcion\": \"Nueva descripción del producto actualizado\",\n    \"precio\": 129.99,\n    \"stock\": 50\n  }\n}"
+						"query": "mutation($id: String!, $input: UpdateProductInput!) {\n  actualizarProducto(id: $id, input: $input) {\n    id\n    nombre\n    descripcion\n    precio\n    stock\n    fechaCreacion\n    fechaActualizacion\n  }\n}",
+						"variables": "{\n  \"id\": \"e3d5fa5d-1474-4279-ac8e-a6c3f014848d\",\n  \"input\": {\n    \"nombre\": \"Producto Actualizado\",\n    \"descripcion\": \"Nueva descripción del producto actualizado\",\n    \"precio\": 129.99,\n    \"stock\": 50\n  }\n}"
 					}
 				},
 				"url": {
@@ -115,8 +115,8 @@
 				"body": {
 					"mode": "graphql",
 					"graphql": {
-						"query": "mutation($id: String!, $input: UpdateProductInput!) {\n  updateProduct(id: $id, input: $input) {\n    id\n    nombre\n    descripcion\n    precio\n    stock\n    fechaCreacion\n    fechaActualizacion\n  }\n}",
-						"variables": "{\n  \"id\": \"1\",\n  \"input\": {\n    \"precio\": 139.99,\n    \"stock\": 45\n  }\n}"
+						"query": "mutation($id: String!, $input: UpdateProductInput!) {\n  actualizarProducto(id: $id, input: $input) {\n    id\n    nombre\n    descripcion\n    precio\n    stock\n    fechaCreacion\n    fechaActualizacion\n  }\n}",
+						"variables": "{\n  \"id\": \"e3d5fa5d-1474-4279-ac8e-a6c3f014848d\",\n  \"input\": {\n    \"precio\": 139.99,\n    \"stock\": 45\n  }\n}"
 					}
 				},
 				"url": {
@@ -140,8 +140,8 @@
 				"body": {
 					"mode": "graphql",
 					"graphql": {
-						"query": "mutation($id: String!) {\n  deleteProduct(id: $id)\n}",
-						"variables": "{\n  \"id\": \"1\"\n}"
+						"query": "mutation($id: String!) {\n  eliminarProducto(id: $id)\n}",
+						"variables": "{\n  \"id\": \"e3d5fa5d-1474-4279-ac8e-a6c3f014848d\"\n}"
 					}
 				},
 				"url": {

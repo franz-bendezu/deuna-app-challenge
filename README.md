@@ -65,103 +65,115 @@ graph TD
 - Node.js (v18+)
 - pnpm
 
-### Configuración con Docker Compose
+### Métodos de Configuración
 
-1. Clona el repositorio:
+Esta aplicación ofrece dos métodos de configuración para adaptarse a diferentes flujos de trabajo:
+
+| Método | Caso de uso | Ventajas | Configuración |
+|--------|-------------|----------|---------------|
+| **Docker Compose (Prod)** | Producción, CI/CD | Entorno completo aislado | `docker compose up` |
+| **Docker Compose (Local)** | Desarrollo local | Infraestructura dockerizada + servicios locales | `docker compose -f docker-compose.local.yml up` |
+
+### 1. Configuración con Docker Compose (Producción)
+
+Este método inicia **todos** los servicios en contenedores Docker, ideal para entornos de producción o pruebas.
+
 ```bash
-git clone https://github.com/your-username/deuna-app-challenge.git
+# Clonar el repositorio
+git clone https://github.com/franz-bendezu/deuna-app-challenge.git
 cd deuna-app-challenge
-```
 
-2. Crea un archivo `.env` en el directorio raíz con las siguientes variables:
-```
-DATABASE_URL="postgresql://postgres:postgres@postgres:5432/product_management?schema=public"
-REDIS_URL="redis://redis:6379"
-KAFKA_BROKER="kafka:9092"
-PORT=3000
-BACKEND_SERVICE_URL="http://product-management-backend:3001"
-```
+# Configurar variables de entorno
+cp .env.example .env
+# Editar .env según necesidades
 
-3. Ejecuta Docker Compose:
-```bash
+# Ejecutar todos los servicios
 docker compose up
 ```
 
-Esto iniciará todos los servicios necesarios:
-- Base de datos PostgreSQL
-- Cache Redis
-- Broker Kafka
-- Servicio Backend de Gestión de Productos
-- Servicio BFF de Gestión de Productos
+Con esta configuración:
+- Los servicios se ejecutan en contenedores aislados
+- Las redes están configuradas internamente
+- No es necesario instalar dependencias localmente
 
-### Configuración Manual (sin Docker)
+### 2. Configuración con Docker Compose (Desarrollo Local)
 
-1. Instala las dependencias:
+Este método inicia solo los servicios de infraestructura en Docker, mientras que los servicios de aplicación se ejecutan localmente para facilitar el desarrollo.
+
 ```bash
+# Clonar el repositorio e instalar dependencias
+git clone https://github.com/franz-bendezu/deuna-app-challenge.git
+cd deuna-app-challenge
 pnpm install
-```
 
-2. Configura tus variables de entorno locales
+# Configurar variables de entorno para desarrollo local
+cp .env.example .env
+# Modificar .env con los siguientes valores:
+# DATABASE_URL="postgresql://postgres:postgres@localhost:5432/products_db?schema=public"
+# BACKEND_PORT=3000
+# BFF_PORT=3001
+# BACKEND_URL="http://localhost:3000"
 
-3. Ejecuta las migraciones de la base de datos:
-```bash
+# Iniciar servicios de infraestructura
+docker compose -f docker-compose.local.yml up -d
+
+# Ejecutar migraciones de base de datos
+npx prisma generate
 npx prisma migrate dev
-```
-
-4. Alimenta la base de datos:
-```bash
 npx prisma db seed
+
+# Iniciar servicios en terminales separadas
+pnpm start:dev:backend  # Terminal 1
+pnpm start:dev:bff      # Terminal 2
 ```
 
-5. Inicia los servicios:
-```bash
-pnpm start:dev:backend
-pnpm start:dev:bff
-```
+Con esta configuración:
+- Solo PostgreSQL, Redis y Kafka se ejecutan en Docker
+- Los servicios de aplicación se ejecutan localmente con hot-reload
+- Facilita el desarrollo y la depuración
 
 ## Configuración de Variables de Entorno
 
-La aplicación utiliza variables de entorno para su configuración. Estas se definen en el archivo `.env`.
+Las variables de entorno son esenciales para la configuración del sistema. El proyecto utiliza un archivo `.env` para gestionar estas variables.
 
-### Configuración de Variables de Entorno
+### Guía de Configuración
 
-1. Copia el archivo `.env.example` para crear tu propio archivo `.env`:
+1. **Crear archivo .env**: Copia el archivo de ejemplo y personalízalo según tu entorno:
+   ```bash
+   cp .env.example .env
+   ```
 
-```bash
-cp .env.example .env
-```
+2. **Configuración por entorno**: Ajusta los valores según el método de configuración elegido:
 
-2. Modifica los valores en el archivo `.env` según sea necesario para tu entorno de desarrollo.
+   | Variable | Producción (Docker) | Desarrollo Local (Docker) |
+   |----------|---------------------|---------------------------|
+   | `DB_HOST` | db | localhost |
+   | `DATABASE_URL` | postgresql://postgres:postgres@db:5432/products_db | postgresql://postgres:postgres@localhost:5432/products_db |
+   | `REDIS_URL` | redis://redis:6379 | redis://localhost:6379 |
+   | `KAFKA_BROKERS` | kafka:9092 | localhost:9092 |
+   | `BACKEND_URL` | http://backend:3000 | http://localhost:3000 |
 
-### Descripción de las Variables de Entorno
+3. **Variables principales**:
 
-Las siguientes variables de entorno son utilizadas en la aplicación:
+   **Base de Datos**
+   - `DB_PASSWORD`: Contraseña de PostgreSQL
+   - `DB_USER`: Usuario de PostgreSQL
+   - `DB_NAME`: Nombre de la base de datos
+   - `DB_HOST`: Host de PostgreSQL
+   - `DB_PORT`: Puerto de PostgreSQL (normalmente 5432)
+   - `DATABASE_URL`: URL de conexión completa para Prisma
 
-#### Configuración de Base de Datos
-- `DB_PASSWORD`: Contraseña de la base de datos PostgreSQL
-- `DB_USER`: Usuario de la base de datos PostgreSQL
-- `DB_NAME`: Nombre de la base de datos PostgreSQL
-- `DB_HOST`: Host de la base de datos PostgreSQL
-- `DB_PORT`: Puerto de la base de datos PostgreSQL
+   **Servicios**
+   - `BACKEND_PORT`: Puerto del servicio backend (normalmente 3000)
+   - `BFF_PORT`: Puerto del servicio BFF (normalmente 3001)
+   - `NODE_ENV`: Entorno (development, production)
+   - `BACKEND_URL`: URL del servicio backend para que BFF se conecte
 
-#### Configuración de Prisma
-- `DATABASE_URL`: Cadena de conexión de PostgreSQL para Prisma
-
-#### Configuración del Backend
-- `PORT`: Puerto en el que se ejecuta el servicio backend
-- `NODE_ENV`: Modo de entorno (desarrollo, producción)
-
-#### Configuración de Redis
-- `REDIS_URL`: URL de conexión de Redis
-- `REDIS_TTL`: Tiempo de vida para los datos en caché en milisegundos
-- `REDIS_LRU_SIZE`: Tamaño de la caché LRU
-
-#### Configuración de Kafka
-- `KAFKA_BROKERS`: Lista separada por comas de brokers de Kafka
-- `KAFKA_CLIENT_ID`: ID de cliente para conexiones Kafka
-
-#### Configuración del BFF
-- `BACKEND_URL`: URL del servicio backend
+   **Cacheo y Mensajería**
+   - `REDIS_URL`: URL de conexión a Redis
+   - `REDIS_TTL`: Tiempo de vida para la caché (ms)
+   - `KAFKA_BROKERS`: Lista de brokers de Kafka
+   - `KAFKA_CLIENT_ID`: ID de cliente para Kafka
 
 ## Ejecución de Pruebas
 
@@ -198,45 +210,53 @@ pnpm test:debug
 
 ### Desarrollo
 ```bash
-# Iniciar ambos servicios en modo desarrollo
+# Iniciar todos los servicios en modo desarrollo
 pnpm start:dev
 
-# Iniciar solo el backend en modo desarrollo
-pnpm start:dev:backend
+# Iniciar servicios individualmente
+pnpm start:dev:backend  # Solo backend
+pnpm start:dev:bff      # Solo BFF
 
-# Iniciar solo el BFF en modo desarrollo
-pnpm start:dev:bff
-
-# Iniciar servicios en modo debug
-pnpm start:debug
+# Iniciar en modo depuración
+pnpm start:debug        # Todos los servicios
 pnpm start:debug:backend
 pnpm start:debug:bff
 ```
 
 ### Gestión de Base de Datos
 ```bash
-# Aplicar migraciones de base de datos
-npx prisma migrate dev
-
-# Generar cliente Prisma
+# Generar cliente Prisma basado en schema
 npx prisma generate
 
-# Alimentar la base de datos con datos iniciales
+# Aplicar migraciones pendientes
+npx prisma migrate dev
+
+# Reiniciar base de datos y aplicar todo
+npx prisma migrate reset
+
+# Cargar datos iniciales
 npx prisma db seed
+
+# Ver datos en interfaz web
+npx prisma studio
 ```
 
 ### Calidad de Código
 ```bash
-# Formatear código con prettier
+# Formatear código
 pnpm format
 
-# Ejecutar linting
+# Ejecutar linter
 pnpm lint
+
+# Ejecutar pruebas
+pnpm test           # Todas las pruebas
+pnpm test:e2e       # Pruebas end-to-end
 ```
 
 ### Producción
 ```bash
-# Construir la aplicación
+# Construir aplicación
 pnpm build
 
 # Iniciar en modo producción
@@ -387,27 +407,6 @@ mutation {
     input: {
       nombre: "Producto Actualizado",
       precio: 129.99
-    }
-  ) {
-    id
-    nombre
-    descripcion
-    precio
-    stock
-    fechaCreacion
-    fechaActualizacion
-  }
-}
-```
-
-#### Actualizar producto parcialmente
-```graphql
-mutation {
-  actualizarProducto(
-    id: "1", 
-    input: {
-      precio: 129.99,
-      stock: 75
     }
   ) {
     id

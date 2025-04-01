@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "58989cab-0730-4a69-beb7-a9db4de5ca32",
+		"_postman_id": "81d6ee0a-2daa-4184-b201-1b624f5e8665",
 		"name": "DeUna Product Management Backend",
 		"description": "Colección para probar la API REST del Backend de Gestión de Productos",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -16,34 +16,15 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{backend_url}}/products",
+							"raw": "{{backend_url}}/productos",
 							"host": [
 								"{{backend_url}}"
 							],
 							"path": [
-								"products"
+								"productos"
 							]
 						},
 						"description": "Obtiene el catálogo completo de productos disponibles"
-					},
-					"response": []
-				},
-				{
-					"name": "Obtener producto por ID",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{backend_url}}/products/1",
-							"host": [
-								"{{backend_url}}"
-							],
-							"path": [
-								"products",
-								"1"
-							]
-						},
-						"description": "Busca y devuelve la información de un producto específico mediante su ID"
 					},
 					"response": []
 				},
@@ -62,12 +43,12 @@
 							"raw": "{\n    \"nombre\": \"Nuevo Producto\",\n    \"descripcion\": \"Descripción detallada del nuevo producto\",\n    \"precio\": 99.99,\n    \"stock\": 100\n}"
 						},
 						"url": {
-							"raw": "{{backend_url}}/products",
+							"raw": "{{backend_url}}/productos",
 							"host": [
 								"{{backend_url}}"
 							],
 							"path": [
-								"products"
+								"productos"
 							]
 						},
 						"description": "Registra un nuevo producto en el catálogo del sistema"
@@ -88,12 +69,12 @@
 									"raw": "{\n    \"nombre\": \"Nuevo Producto\",\n    \"descripcion\": \"Descripción detallada del nuevo producto\",\n    \"precio\": 99.99,\n    \"stock\": 100\n}"
 								},
 								"url": {
-									"raw": "{{backend_url}}/products",
+									"raw": "{{backend_url}}/productos",
 									"host": [
 										"{{backend_url}}"
 									],
 									"path": [
-										"products"
+										"productos"
 									]
 								}
 							},
@@ -105,6 +86,25 @@
 							"body": "{\n    \"id\": \"1\",\n    \"nombre\": \"Nuevo Producto\",\n    \"descripcion\": \"Descripción detallada del nuevo producto\",\n    \"precio\": 99.99,\n    \"stock\": 100,\n    \"fechaCreacion\": \"2023-08-01T12:00:00.000Z\",\n    \"fechaActualizacion\": \"2023-08-01T12:00:00.000Z\"\n}"
 						}
 					]
+				},
+				{
+					"name": "Obtener producto por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{backend_url}}/productos/98b04542-7695-43f7-84a9-36fa90ef4e4a",
+							"host": [
+								"{{backend_url}}"
+							],
+							"path": [
+								"productos",
+								"98b04542-7695-43f7-84a9-36fa90ef4e4a"
+							]
+						},
+						"description": "Busca y devuelve la información de un producto específico mediante su ID"
+					},
+					"response": []
 				},
 				{
 					"name": "Actualizar producto",
@@ -121,13 +121,13 @@
 							"raw": "{\n    \"id\": \"1\",\n    \"nombre\": \"Producto Actualizado\",\n    \"descripcion\": \"Nueva descripción del producto actualizado\",\n    \"precio\": 129.99,\n    \"stock\": 50\n}"
 						},
 						"url": {
-							"raw": "{{backend_url}}/products/1",
+							"raw": "{{backend_url}}/productos/98b04542-7695-43f7-84a9-36fa90ef4e4a",
 							"host": [
 								"{{backend_url}}"
 							],
 							"path": [
-								"products",
-								"1"
+								"productos",
+								"98b04542-7695-43f7-84a9-36fa90ef4e4a"
 							]
 						},
 						"description": "Actualiza la información de un producto existente en el catálogo"
@@ -148,13 +148,13 @@
 									"raw": "{\n    \"id\": \"1\",\n    \"nombre\": \"Producto Actualizado\",\n    \"descripcion\": \"Nueva descripción del producto actualizado\",\n    \"precio\": 129.99,\n    \"stock\": 50\n}"
 								},
 								"url": {
-									"raw": "{{backend_url}}/products/1",
+									"raw": "{{backend_url}}/productos/e3d5fa5d-1474-4279-ac8e-a6c3f014848d",
 									"host": [
 										"{{backend_url}}"
 									],
 									"path": [
-										"products",
-										"1"
+										"productos",
+										"e3d5fa5d-1474-4279-ac8e-a6c3f014848d"
 									]
 								}
 							},
@@ -182,13 +182,13 @@
 							"raw": "{\n    \"precio\": 139.99,\n    \"stock\": 45\n}"
 						},
 						"url": {
-							"raw": "{{backend_url}}/products/1",
+							"raw": "{{backend_url}}/productos/10e32a5d-0584-4b9e-a5eb-2ea5bd75f836",
 							"host": [
 								"{{backend_url}}"
 							],
 							"path": [
-								"products",
-								"1"
+								"productos",
+								"10e32a5d-0584-4b9e-a5eb-2ea5bd75f836"
 							]
 						},
 						"description": "Actualiza parcialmente la información de un producto existente en el catálogo"
@@ -209,13 +209,13 @@
 									"raw": "{\n    \"precio\": 139.99,\n    \"stock\": 45\n}"
 								},
 								"url": {
-									"raw": "{{backend_url}}/products/1",
+									"raw": "{{backend_url}}/productos/e3d5fa5d-1474-4279-ac8e-a6c3f014848d",
 									"host": [
 										"{{backend_url}}"
 									],
 									"path": [
-										"products",
-										"1"
+										"productos",
+										"e3d5fa5d-1474-4279-ac8e-a6c3f014848d"
 									]
 								}
 							},
@@ -234,13 +234,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{backend_url}}/products/1",
+							"raw": "{{backend_url}}/productos/98b04542-7695-43f7-84a9-36fa90ef4e4a",
 							"host": [
 								"{{backend_url}}"
 							],
 							"path": [
-								"products",
-								"1"
+								"productos",
+								"98b04542-7695-43f7-84a9-36fa90ef4e4a"
 							]
 						},
 						"description": "Elimina permanentemente un producto del catálogo"

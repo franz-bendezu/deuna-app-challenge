@@ -3,32 +3,33 @@ version: '3.8'
 services:
   bff:
     build:
-      context: ./apps/product-management-bff
+      context: .
       dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: product-management-bff
     container_name: deuna-bff
     ports:
-      - "3001:3001"
+      - "4001:3001"
     environment:
       - NODE_ENV=development
       - BFF_PORT=3001
       - BACKEND_URL=http://backend:3000
-    volumes:
-      - ./apps/product-management-bff:/app
-      - /app/node_modules
     depends_on:
       - backend
       - redis
       - kafka
+    restart: unless-stopped
     networks:
       - deuna-network
-
   backend:
     build:
-      context: ./apps/product-management-backend
+      context: .
       dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: product-management-backend
     container_name: deuna-backend
     ports:
-      - "3000:3000"
+      - "4000:3000"
     environment:
       - NODE_ENV=development
       - BACKEND_PORT=3000
@@ -38,37 +39,64 @@ services:
       - REDIS_LRU_SIZE=5000
       - KAFKA_BROKERS=kafka:9092
       - KAFKA_CLIENT_ID=product-management-service
-    volumes:
-      - ./apps/product-management-backend:/app
-      - /app/node_modules
     depends_on:
-      - postgres
-      - redis
-      - kafka
+      postgres:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
+      redis:
+        condition: service_started
+      kafka:
+        condition: service_started
+    restart: unless-stopped
+    networks:
+      - deuna-network
+
+  migrations:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: product-management-backend
+    container_name: deuna-migrations
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/products_db?schema=public
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: npx prisma db push
     networks:
       - deuna-network
 
   postgres:
     image: postgres:17.4
     container_name: deuna-postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: products_db
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
     networks:
       - deuna-network
+
 
   redis:
     image: redis:7.4.2-alpine
     container_name: deuna-redis
     ports:
-      - "6379:6379"
+      - "6380:6379"
     volumes:
       - redis-data:/data
+    restart: unless-stopped
     networks:
       - deuna-network
 
@@ -81,6 +109,7 @@ services:
     volumes:
       - zookeeper-data:/var/lib/zookeeper/data
       - zookeeper-log:/var/lib/zookeeper/log
+    restart: unless-stopped
     networks:
       - deuna-network
 
@@ -90,15 +119,18 @@ services:
     depends_on:
       - zookeeper
     ports:
-      - "9092:9092"
+      - "9093:9092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:9093
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     volumes:
       - kafka-data:/var/lib/kafka/data
+    restart: unless-stopped
     networks:
       - deuna-network
 
@@ -106,7 +138,7 @@ services:
     image: provectuslabs/kafka-ui:latest
     container_name: deuna-kafka-ui
     ports:
-      - "8080:8080"
+      - "8081:8080"
     environment:
       KAFKA_CLUSTERS_0_NAME: deuna-cluster
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
@@ -114,6 +146,7 @@ services:
     depends_on:
       - kafka
       - zookeeper
+    restart: unless-stopped
     networks:
       - deuna-network
 

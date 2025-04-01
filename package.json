@@ -10,6 +10,8 @@
   },
   "scripts": {
     "build": "nest build",
+    "build:backend": "pnpm run prisma:generate && nest build product-management-backend",
+    "build:bff": "nest build product-management-bff",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start": "nest start",
     "start:backend": "nest start product-management-backend",
@@ -28,7 +30,12 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./apps/product-management-bff/test/jest-e2e.json",
     "test:backend:e2e": "jest --config ./apps/product-management-backend/test/jest-e2e.json",
-    "test:bff:e2e": "jest --config ./apps/product-management-bff/test/jest-e2e.json"
+    "test:bff:e2e": "jest --config ./apps/product-management-bff/test/jest-e2e.json",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:db:push": "prisma db push",
+    "prisma:generate": "prisma generate",
+    "prisma:seed": "prisma db seed",
+    "prisma:reset": "prisma migrate reset"
   },
   "dependencies": {
     "@apollo/server": "^4.11.3",

@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "a32f797c-5fc5-4525-a6e9-6fbfd1f3e0d9",
+		"_postman_id": "bb94ee32-8a2d-4207-b406-7b79e85d5440",
 		"name": "DeUna Integration Tests",
 		"description": "Pruebas de integración para validar el flujo completo entre BFF y Backend",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -48,12 +48,12 @@
 							"raw": "{\n    \"nombre\": \"Producto de Prueba\",\n    \"descripcion\": \"Producto creado para pruebas de integración\",\n    \"precio\": 99.99,\n    \"stock\": 100\n}"
 						},
 						"url": {
-							"raw": "{{backend_url}}/products",
+							"raw": "{{backend_url}}/productos",
 							"host": [
 								"{{backend_url}}"
 							],
 							"path": [
-								"products"
+								"productos"
 							]
 						},
 						"description": "Crea un producto de prueba en el backend"
@@ -76,8 +76,8 @@
 									"var jsonData = pm.response.json();",
 									"",
 									"pm.test(\"BFF muestra el producto correctamente\", function () {",
-									"    pm.expect(jsonData.data.product.id).to.eql(pm.environment.get(\"test_product_id\"));",
-									"    pm.expect(jsonData.data.product.nombre).to.eql(\"Producto de Prueba\");",
+									"    pm.expect(jsonData.data.producto.id).to.eql(pm.environment.get(\"test_product_id\"));",
+									"    pm.expect(jsonData.data.producto.nombre).to.eql(\"Producto de Prueba\");",
 									"});"
 								]
 							}
@@ -89,7 +89,7 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "query($id: String!) {\n  product(id: $id) {\n    id\n    nombre\n    descripcion\n    precio\n    stock\n    fechaCreacion\n    fechaActualizacion\n  }\n}",
+								"query": "query($id: String!) {\n  producto(id: $id) {\n    id\n    nombre\n    descripcion\n    precio\n    stock\n    fechaCreacion\n    fechaActualizacion\n  }\n}",
 								"variables": "{\n  \"id\": \"{{test_product_id}}\"\n}"
 							}
 						},
@@ -122,8 +122,8 @@
 									"var jsonData = pm.response.json();",
 									"",
 									"pm.test(\"Producto actualizado parcialmente desde BFF\", function () {",
-									"    pm.expect(jsonData.data.updateProduct.precio).to.eql(129.99);",
-									"    pm.expect(jsonData.data.updateProduct.nombre).to.eql(\"Producto de Prueba\");  // no debe cambiar",
+									"    pm.expect(jsonData.data.actualizarProducto.precio).to.eql(129.99);",
+									"    pm.expect(jsonData.data.actualizarProducto.nombre).to.eql(\"Producto de Prueba\");  // no debe cambiar",
 									"});"
 								]
 							}
@@ -135,7 +135,7 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "mutation($id: String!, $input: UpdateProductInput!) {\n  updateProduct(id: $id, input: $input) {\n    id\n    nombre\n    descripcion\n    precio\n    stock\n    fechaCreacion\n    fechaActualizacion\n  }\n}",
+								"query": "mutation($id: String!, $input: UpdateProductInput!) {\n  actualizarProducto(id: $id, input: $input) {\n    id\n    nombre\n    descripcion\n    precio\n    stock\n    fechaCreacion\n    fechaActualizacion\n  }\n}",
 								"variables": "{\n  \"id\": \"{{test_product_id}}\",\n  \"input\": {\n    \"precio\": 129.99\n  }\n}"
 							}
 						},
@@ -168,8 +168,8 @@
 									"var jsonData = pm.response.json();",
 									"",
 									"pm.test(\"Producto actualizado correctamente desde BFF\", function () {",
-									"    pm.expect(jsonData.data.updateProduct.nombre).to.eql(\"Producto Actualizado\");",
-									"    pm.expect(jsonData.data.updateProduct.precio).to.eql(149.99);",
+									"    pm.expect(jsonData.data.actualizarProducto.nombre).to.eql(\"Producto Actualizado\");",
+									"    pm.expect(jsonData.data.actualizarProducto.precio).to.eql(149.99);",
 									"});"
 								]
 							}
@@ -181,7 +181,7 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "mutation($id: String!, $input: UpdateProductInput!) {\n  updateProduct(id: $id, input: $input) {\n    id\n    nombre\n    descripcion\n    precio\n    stock\n    fechaCreacion\n    fechaActualizacion\n  }\n}",
+								"query": "mutation($id: String!, $input: UpdateProductInput!) {\n  actualizarProducto(id: $id, input: $input) {\n    id\n    nombre\n    descripcion\n    precio\n    stock\n    fechaCreacion\n    fechaActualizacion\n  }\n}",
 								"variables": "{\n  \"id\": \"{{test_product_id}}\",\n  \"input\": {\n    \"nombre\": \"Producto Actualizado\",\n    \"descripcion\": \"Este producto ha sido actualizado a través del BFF\",\n    \"precio\": 149.99,\n    \"stock\": 75\n  }\n}"
 							}
 						},
@@ -226,12 +226,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{backend_url}}/products/{{test_product_id}}",
+							"raw": "{{backend_url}}/productos/{{test_product_id}}",
 							"host": [
 								"{{backend_url}}"
 							],
 							"path": [
-								"products",
+								"productos",
 								"{{test_product_id}}"
 							]
 						},
@@ -275,12 +275,12 @@
 							"raw": "{\n    \"stock\": 25\n}"
 						},
 						"url": {
-							"raw": "{{backend_url}}/products/{{test_product_id}}",
+							"raw": "{{backend_url}}/productos/{{test_product_id}}",
 							"host": [
 								"{{backend_url}}"
 							],
 							"path": [
-								"products",
+								"productos",
 								"{{test_product_id}}"
 							]
 						},
@@ -308,12 +308,12 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{backend_url}}/products/{{test_product_id}}",
+							"raw": "{{backend_url}}/productos/{{test_product_id}}",
 							"host": [
 								"{{backend_url}}"
 							],
 							"path": [
-								"products",
+								"productos",
 								"{{test_product_id}}"
 							]
 						},
@@ -345,7 +345,7 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "query($id: String!) {\n  product(id: $id) {\n    id\n    nombre\n  }\n}",
+								"query": "query($id: String!) {\n  producto(id: $id) {\n    id\n    nombre\n  }\n}",
 								"variables": "{\n  \"id\": \"{{test_product_id}}\"\n}"
 							}
 						},
