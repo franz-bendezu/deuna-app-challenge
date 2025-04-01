@@ -69,10 +69,10 @@ graph TD
 
 Esta aplicación ofrece dos métodos de configuración para adaptarse a diferentes flujos de trabajo:
 
-| Método | Caso de uso | Ventajas | Configuración |
-|--------|-------------|----------|---------------|
-| **Docker Compose (Prod)** | Producción, CI/CD | Entorno completo aislado | `docker compose up` |
-| **Docker Compose (Local)** | Desarrollo local | Infraestructura dockerizada + servicios locales | `docker compose -f docker-compose.local.yml up` |
+| Método | Caso de uso | Ventajas | Configuración | Puertos |
+|--------|-------------|----------|---------------|---------|
+| **Docker Compose (Prod)** | Producción, CI/CD | Entorno completo aislado | `docker compose up` | Backend: 4000:3000, BFF: 4001:3001 |
+| **Docker Compose (Local)** | Desarrollo local | Infraestructura dockerizada + servicios locales | `docker compose -f docker-compose.local.yml up` | Backend: 3000, BFF: 3001 |
 
 ### 1. Configuración con Docker Compose (Producción)
 
@@ -95,6 +95,13 @@ Con esta configuración:
 - Los servicios se ejecutan en contenedores aislados
 - Las redes están configuradas internamente
 - No es necesario instalar dependencias localmente
+- Los servicios se mapean a los siguientes puertos:
+  - Backend: Accesible en el puerto 4000 (mapeo interno al 3000)
+  - BFF: Accesible en el puerto 4001 (mapeo interno al 3001)
+  - PostgreSQL: Accesible en el puerto 5433 (mapeo interno al 5432)
+  - Redis: Accesible en el puerto 6380 (mapeo interno al 6379)
+  - Kafka: Accesible en el puerto 9093 (mapeo interno al 9092)
+  - Kafka UI: Accesible en el puerto 8081 (mapeo interno al 8080)
 
 ### 2. Configuración con Docker Compose (Desarrollo Local)
 
@@ -132,6 +139,11 @@ Con esta configuración:
 - Los servicios de aplicación se ejecutan localmente con hot-reload
   - Backend en puerto 3000
   - BFF en puerto 3001
+- Los servicios de infraestructura se mapean a los siguientes puertos:
+  - PostgreSQL: Accesible en el puerto 5432
+  - Redis: Accesible en el puerto 6379
+  - Kafka: Accesible en el puerto 9092
+  - Kafka UI: Accesible en el puerto 8080
 - Facilita el desarrollo y la depuración
 
 ## Configuración de Variables de Entorno
@@ -282,8 +294,13 @@ La colección utiliza variables de entorno para facilitar las pruebas en diferen
 
 ### Variables de entorno
 
-- `backend_url`: URL base para el servicio Backend (predeterminado: http://localhost:3000)
-- `bff_url`: URL base para el servicio BFF (predeterminado: http://localhost:3001)
+En el ambiente de desarrollo local (docker-compose.local.yml):
+- `backend_url`: URL base para el servicio Backend (http://localhost:3000)
+- `bff_url`: URL base para el servicio BFF (http://localhost:3001)
+
+En el ambiente de producción (docker-compose.yml):
+- `backend_url`: URL base para el servicio Backend (http://localhost:4000)
+- `bff_url`: URL base para el servicio BFF (http://localhost:4001)
 
 ### Guía de uso
 
