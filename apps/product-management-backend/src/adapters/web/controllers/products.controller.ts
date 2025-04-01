@@ -9,6 +9,7 @@ import {
   Inject,
   HttpCode,
   HttpStatus,
+  Patch,
 } from '@nestjs/common';
 import { CreateProductDto } from '../dtos/create-product.dto';
 import { ProductDTO } from '../dtos/product.dto';
@@ -137,6 +138,13 @@ export class ProductsController {
     return ProductMapper.mapToDto(updatedProduct);
   }
 
+  @Patch(`${ProductsController.PATH_ID}`)
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Modificar parcialmente producto',
+    description:
+      'Actualiza parcialmente la información de un producto existente en el catálogo.',
+  })
   async partialUpdate(
     @Param(ProductsController.PATH_ID_PARAM) id: string,
     @Body() updateProductDto: BaseProductDto,
